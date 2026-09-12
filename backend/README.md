@@ -9,7 +9,7 @@ Spring Boot backend for the KERNEL interactive superhero help portal. Provides R
 - Java 21
 - Maven 3.8+
 - MongoDB Atlas account
-- OpenAI API key
+- Gemini API key
 - Resend API key
 
 ## Tech Stack
@@ -17,7 +17,7 @@ Spring Boot backend for the KERNEL interactive superhero help portal. Provides R
 - Spring Data MongoDB
 - Spring Security (JWT)
 - Spring WebSocket (STOMP)
-- OpenAI API
+- Google Gemini API
 - Resend API
 - Bean Validation (Jakarta)
 - Jackson
@@ -27,8 +27,8 @@ Spring Boot backend for the KERNEL interactive superhero help portal. Provides R
 | Variable | Required | Description |
 |---|---|---|
 | MONGODB_URI | ✅ | MongoDB Atlas connection string |
-| OPENAI_API_KEY | ✅ | OpenAI API key |
-| OPENAI_MODEL | ❌ | OpenAI model (default: gpt-4o) |
+| GEMINI_API_KEY | ✅ | Google Gemini API key |
+| GEMINI_MODEL | ❌ | Gemini model (default: gemini-1.5-flash) |
 | RESEND_API_KEY | ✅ | Resend email API key |
 | RESEND_FROM_EMAIL | ✅ | Sender email for Resend |
 | ADMIN_PASSWORD | ✅ | Admin authentication password |

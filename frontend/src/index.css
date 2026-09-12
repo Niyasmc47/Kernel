@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --primary: #0284c7;
+    --primary-foreground: #ffffff;
+    --border: #e2e8f0;
+  }
+  
+  .dark {
+    --background: #0B0C10;
+    --foreground: #C5C6C7;
+    --primary: #66FCF1;
+    --primary-foreground: #0B0C10;
+    --border: #1F2833;
+  }
+}
+
+body {
+  @apply bg-background text-foreground font-cinematic antialiased selection:bg-kernel-cyan selection:text-kernel-navy;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar for Chat */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-kernel-dark rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-kernel-teal;
+}
+
+/* Utilities */
+.text-shadow-cyan {
+  text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+}
+
+.text-shadow-violet {
+  text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+.scanline-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0) 50%,
+    rgba(0,0,0,0.1) 50%,
+    rgba(0,0,0,0.1)
+  );
+  background-size: 100% 4px;
+}
+
