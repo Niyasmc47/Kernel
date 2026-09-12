@@ -1,0 +1,41 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: kernel-backend
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+kernel:
+  openai:
+    api-key: ${OPENAI_API_KEY}
+    model: ${OPENAI_MODEL:gpt-4o}
+    base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+  resend:
+    api-key: ${RESEND_API_KEY}
+    from-email: ${RESEND_FROM_EMAIL}
+  admin:
+    password: ${ADMIN_PASSWORD}
+  security:
+    jwt-secret: ${JWT_SECRET:#{T(java.util.UUID).randomUUID().toString()}}
+    jwt-expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+  cors:
+    allowed-origins: ${FRONTEND_URL:http://localhost:3000}
+  communication:
+    session-ttl-minutes: ${COMMUNICATION_SESSION_TTL_MINUTES:60}
+  conversation:
+    session-ttl-minutes: ${CONVERSATION_SESSION_TTL_MINUTES:30}
+  backend:
+    url: ${BACKEND_URL:http://localhost:8080}
+
+springdoc:
+  api-docs:
+    path: /api/docs
+  swagger-ui:
+    path: /api/swagger-ui
