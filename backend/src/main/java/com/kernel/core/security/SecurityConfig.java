@@ -60,10 +60,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(@Value("${kernel.cors.allowed-origins:*}") String allowedOrigins) {
         CorsConfiguration configuration = new CorsConfiguration();
-        if ("*".equals(allowedOrigins)) {
+        if (allowedOrigins == null || allowedOrigins.trim().isEmpty() || "*".equals(allowedOrigins.trim())) {
             configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
         } else {
-            configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+            configuration.setAllowedOriginPatterns(Arrays.stream(allowedOrigins.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList());
         }
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
