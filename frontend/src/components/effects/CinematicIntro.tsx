@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, SkipForward } from 'lucide-react';
 
 interface CinematicIntroProps {
@@ -10,7 +10,6 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
-  const prefersReduced = useReducedMotion();
 
   const handleFinish = () => {
     try {
@@ -40,13 +39,6 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
   };
 
   useEffect(() => {
-    // If user prefers reduced motion, skip intro immediately
-    if (prefersReduced) {
-      handleFinish();
-      onComplete();
-      return;
-    }
-
     // Check session storage
     try {
       if (sessionStorage.getItem('kernel_intro_played') === 'true') {
@@ -60,18 +52,35 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
 
     const video = videoRef.current;
     if (video) {
-      // First attempt autoplay with audio
+      // First attempt autoplay with audio on (volume 100%)
+      video.volume = 1.0;
       video.muted = false;
       setIsMuted(false);
 
       video.play().catch(() => {
-        // If browser blocks unmuted autoplay, fall back to muted playback
+        // If browser blocks unmuted autoplay without prior gesture, start muted
         video.muted = true;
         setIsMuted(true);
         video.play().catch((err) => {
           console.warn('Intro video autoplay prevented:', err);
           handleFinish();
         });
+
+        // Unmute automatically on the very first user click/touch anywhere
+        const enableAudioOnGesture = () => {
+          if (videoRef.current) {
+            videoRef.current.muted = false;
+            setIsMuted(false);
+            videoRef.current.play().catch(() => {});
+          }
+          window.removeEventListener('click', enableAudioOnGesture);
+          window.removeEventListener('touchstart', enableAudioOnGesture);
+          window.removeEventListener('keydown', enableAudioOnGesture);
+        };
+
+        window.addEventListener('click', enableAudioOnGesture, { once: true });
+        window.addEventListener('touchstart', enableAudioOnGesture, { once: true });
+        window.addEventListener('keydown', enableAudioOnGesture, { once: true });
       });
     }
 
@@ -81,7 +90,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
     }, 12000);
 
     return () => clearTimeout(safetyTimer);
-  }, [prefersReduced]);
+  }, []);
 
   return (
     <AnimatePresence onExitComplete={onComplete}>

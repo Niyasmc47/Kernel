@@ -144,8 +144,16 @@ export default function AmbientAudio({ isPlaying = true }: AmbientAudioProps) {
     }
   };
 
-  // Start audio on first user gesture if not muted
+  // Start audio on mount or first user gesture if not muted
   useEffect(() => {
+    // Attempt immediate start if audio context can run
+    if (!muted) {
+      initAudioEngine();
+      if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
+        setHasInteracted(true);
+      }
+    }
+
     const handleFirstGesture = () => {
       setHasInteracted(true);
       if (!muted) {

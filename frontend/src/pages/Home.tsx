@@ -14,9 +14,6 @@ export default function Home() {
   const [introFinished, setIntroFinished] = useState(() => {
     if (typeof window === 'undefined') return true;
     try {
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        return true;
-      }
       return sessionStorage.getItem('kernel_intro_played') === 'true';
     } catch {
       return false;
