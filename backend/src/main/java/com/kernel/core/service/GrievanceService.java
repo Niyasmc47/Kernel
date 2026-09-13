@@ -16,10 +16,14 @@ import com.kernel.core.service.session.CommunicationSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class GrievanceService {
@@ -29,6 +33,7 @@ public class GrievanceService {
     private final EmailService emailService;
     private final AiService aiService;
     private final CommunicationSessionService communicationSessionService;
+    private final Map<String, Grievance> inMemoryStore = new ConcurrentHashMap<>();
 
     public GrievanceService(GrievanceRepository grievanceRepository,
                             EmailService emailService,
@@ -73,13 +78,23 @@ public class GrievanceService {
             grievance.setUrgency(Urgency.LOW);
         }
 
-        Grievance saved = grievanceRepository.save(grievance);
+        Grievance saved = grievance;
+        try {
+            saved = grievanceRepository.save(grievance);
+        } catch (Exception e) {
+            log.warn("Database save failed ({}). Preserving grievance in memory fallback.", e.getMessage());
+            if (saved.getId() == null) {
+                saved.setId("grv-" + UUID.randomUUID().toString());
+            }
+        }
+
+        inMemoryStore.put(saved.getId(), saved);
 
         // Send confirmation email — never lose the grievance if email fails
         try {
             emailService.sendGrievanceConfirmation(saved);
         } catch (Exception e) {
-            log.error("Failed to send confirmation email for grievance ID: {}", saved.getId());
+            log.error("Failed to send confirmation email for grievance ID: {}", saved.getId(), e);
         }
 
         log.info("Created new grievance with ID: {}", saved.getId());
@@ -93,19 +108,50 @@ public class GrievanceService {
     }
 
     public Page<Grievance> findAll(Pageable pageable) {
-        return grievanceRepository.findAll(pageable);
+        try {
+            Page<Grievance> page = grievanceRepository.findAll(pageable);
+            if (page.hasContent()) {
+                page.forEach(g -> inMemoryStore.putIfAbsent(g.getId(), g));
+                return page;
+            }
+        } catch (Exception e) {
+            log.warn("Mongo findAll failed ({}). Falling back to in-memory store.", e.getMessage());
+        }
+        return getInMemoryPage(pageable, g -> true);
     }
 
     public Grievance findById(String id) {
-        return grievanceRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Grievance not found with ID: " + id));
+        if (inMemoryStore.containsKey(id)) {
+            return inMemoryStore.get(id);
+        }
+        try {
+            return grievanceRepository.findById(id)
+                    .map(g -> {
+                        inMemoryStore.put(g.getId(), g);
+                        return g;
+                    })
+                    .orElseThrow(() -> new ResourceNotFoundException("Grievance not found with ID: " + id));
+        } catch (ResourceNotFoundException rnfe) {
+            throw rnfe;
+        } catch (Exception e) {
+            log.warn("Mongo findById failed: {}. Checking in-memory store.", e.getMessage());
+            Grievance found = inMemoryStore.get(id);
+            if (found != null) return found;
+            throw new ResourceNotFoundException("Grievance not found with ID: " + id);
+        }
     }
 
     public Grievance updateStatus(String id, GrievanceStatus status) {
         Grievance grievance = findById(id);
         grievance.setStatus(status);
         grievance.setUpdatedAt(Instant.now());
-        return grievanceRepository.save(grievance);
+        inMemoryStore.put(id, grievance);
+        try {
+            return grievanceRepository.save(grievance);
+        } catch (Exception e) {
+            log.warn("Mongo save on status update failed: {}", e.getMessage());
+            return grievance;
+        }
     }
 
     public CommunicationEnableResponse enableCommunication(String id, String backendUrl) {
@@ -122,14 +168,19 @@ public class GrievanceService {
         grievance.setCommunicationToken(session.getVisitorToken());
         grievance.setCommunicationEnabledAt(Instant.now());
         grievance.setUpdatedAt(Instant.now());
-        grievanceRepository.save(grievance);
+        inMemoryStore.put(id, grievance);
+        try {
+            grievanceRepository.save(grievance);
+        } catch (Exception e) {
+            log.warn("Mongo save on enableCommunication failed: {}", e.getMessage());
+        }
 
         String visitorLink = backendUrl + "/communicate?token=" + session.getVisitorToken();
 
         try {
             emailService.sendCommunicationInvite(grievance, visitorLink);
         } catch (Exception e) {
-            log.error("Failed to send communication invite email for grievance ID: {}", grievance.getId());
+            log.error("Failed to send communication invite email for grievance ID: {}", grievance.getId(), e);
         }
 
         CommunicationEnableResponse response = new CommunicationEnableResponse();
@@ -156,23 +207,74 @@ public class GrievanceService {
         grievance.setCommunicationClosedAt(Instant.now());
         grievance.setCommunicationToken(null);
         grievance.setUpdatedAt(Instant.now());
-        grievanceRepository.save(grievance);
+        inMemoryStore.put(id, grievance);
+        try {
+            grievanceRepository.save(grievance);
+        } catch (Exception e) {
+            log.warn("Mongo save on closeCommunication failed: {}", e.getMessage());
+        }
     }
 
     public Page<Grievance> searchGrievances(String keyword, Pageable pageable) {
-        return grievanceRepository.searchByKeyword(keyword, pageable);
+        try {
+            Page<Grievance> page = grievanceRepository.searchByKeyword(keyword, pageable);
+            if (page.hasContent()) return page;
+        } catch (Exception e) {
+            log.warn("Mongo search failed: {}", e.getMessage());
+        }
+        String lower = keyword.toLowerCase();
+        return getInMemoryPage(pageable, g -> 
+            (g.getName() != null && g.getName().toLowerCase().contains(lower)) ||
+            (g.getLocation() != null && g.getLocation().toLowerCase().contains(lower)) ||
+            (g.getOriginalGrievance() != null && g.getOriginalGrievance().toLowerCase().contains(lower)) ||
+            (g.getAiSummary() != null && g.getAiSummary().toLowerCase().contains(lower))
+        );
     }
 
     public Page<Grievance> findByStatus(GrievanceStatus status, Pageable pageable) {
-        return grievanceRepository.findByStatus(status, pageable);
+        try {
+            Page<Grievance> page = grievanceRepository.findByStatus(status, pageable);
+            if (page.hasContent()) return page;
+        } catch (Exception e) {
+            log.warn("Mongo findByStatus failed: {}", e.getMessage());
+        }
+        return getInMemoryPage(pageable, g -> g.getStatus() == status);
     }
 
     public Page<Grievance> findByCategory(Category category, Pageable pageable) {
-        return grievanceRepository.findByCategory(category, pageable);
+        try {
+            Page<Grievance> page = grievanceRepository.findByCategory(category, pageable);
+            if (page.hasContent()) return page;
+        } catch (Exception e) {
+            log.warn("Mongo findByCategory failed: {}", e.getMessage());
+        }
+        return getInMemoryPage(pageable, g -> g.getCategory() == category);
     }
 
     public Page<Grievance> findByUrgency(Urgency urgency, Pageable pageable) {
-        return grievanceRepository.findByUrgency(urgency, pageable);
+        try {
+            Page<Grievance> page = grievanceRepository.findByUrgency(urgency, pageable);
+            if (page.hasContent()) return page;
+        } catch (Exception e) {
+            log.warn("Mongo findByUrgency failed: {}", e.getMessage());
+        }
+        return getInMemoryPage(pageable, g -> g.getUrgency() == urgency);
+    }
+
+    private Page<Grievance> getInMemoryPage(Pageable pageable, java.util.function.Predicate<Grievance> filter) {
+        List<Grievance> list = inMemoryStore.values().stream()
+                .filter(filter)
+                .sorted((a, b) -> {
+                    Instant ta = a.getCreatedAt() != null ? a.getCreatedAt() : Instant.MIN;
+                    Instant tb = b.getCreatedAt() != null ? b.getCreatedAt() : Instant.MIN;
+                    return tb.compareTo(ta); // desc order (newest first)
+                })
+                .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), list.size());
+        List<Grievance> subList = (start >= list.size()) ? Collections.emptyList() : list.subList(start, end);
+        return new PageImpl<>(subList, pageable, list.size());
     }
 
     private Category parseCategory(String category) {

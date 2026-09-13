@@ -10,7 +10,7 @@ Spring Boot backend for the KERNEL interactive superhero help portal. Provides R
 - Maven 3.8+
 - MongoDB Atlas account
 - Gemini API key
-- Resend API key
+- Google Account with App Password (for Gmail SMTP)
 
 ## Tech Stack
 - Spring Boot 3.2.5
@@ -18,7 +18,7 @@ Spring Boot backend for the KERNEL interactive superhero help portal. Provides R
 - Spring Security (JWT)
 - Spring WebSocket (STOMP)
 - Google Gemini API
-- Resend API
+- Spring Boot Mail (JavaMailSender / Google SMTP)
 - Bean Validation (Jakarta)
 - Jackson
 
@@ -29,8 +29,8 @@ Spring Boot backend for the KERNEL interactive superhero help portal. Provides R
 | MONGODB_URI | ✅ | MongoDB Atlas connection string |
 | GEMINI_API_KEY | ✅ | Google Gemini API key |
 | GEMINI_MODEL | ❌ | Gemini model (default: gemini-1.5-flash) |
-| RESEND_API_KEY | ✅ | Resend email API key |
-| RESEND_FROM_EMAIL | ✅ | Sender email for Resend |
+| GMAIL_USERNAME | ✅ | Gmail address for sending emails (e.g. niyas36et@gmail.com) |
+| GMAIL_APP_PASSWORD | ✅ | Google 16-character App Password |
 | ADMIN_PASSWORD | ✅ | Admin authentication password |
 | JWT_SECRET | ❌ | JWT signing secret (auto-generated if not set) |
 | FRONTEND_URL | ❌ | Frontend origin for CORS (default: http://localhost:3000) |

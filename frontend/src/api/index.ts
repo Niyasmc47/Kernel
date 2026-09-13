@@ -9,10 +9,23 @@ export const api = axios.create({
   },
 });
 
+// Secure in-memory token storage (never written to localStorage or sessionStorage)
+let inMemoryAuthToken: string | null = null;
+
+export const setAuthToken = (token: string | null) => {
+  inMemoryAuthToken = token;
+  // Purge any lingering tokens from browser storage
+  try {
+    localStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminToken');
+  } catch {}
+};
+
+export const getAuthToken = () => inMemoryAuthToken;
+
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('adminToken');
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (inMemoryAuthToken && config.headers) {
+    config.headers.Authorization = `Bearer ${inMemoryAuthToken}`;
   }
   return config;
 });

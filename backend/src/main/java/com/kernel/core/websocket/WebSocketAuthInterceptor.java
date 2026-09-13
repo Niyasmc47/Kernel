@@ -30,13 +30,15 @@ public class WebSocketAuthInterceptor implements HandshakeInterceptor {
             return false;
         }
 
-        String token = extractToken(query);
+        String token = extractParam(query, "token");
         if (token == null) {
             return false;
         }
 
+        String grievanceId = extractParam(query, "grievanceId");
+
         try {
-            CommunicationSession session = communicationSessionService.getSessionByToken(token);
+            CommunicationSession session = communicationSessionService.getSessionByTokenAndGrievance(token, grievanceId);
             String role = communicationSessionService.resolveRole(token, session);
 
             attributes.put("token", token);
@@ -54,12 +56,16 @@ public class WebSocketAuthInterceptor implements HandshakeInterceptor {
         // No-op
     }
 
-    private String extractToken(String query) {
+    private String extractParam(String query, String name) {
         String[] pairs = query.split("&");
         for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
-            if (keyValue.length == 2 && "token".equals(keyValue[0])) {
-                return keyValue[1];
+            String[] keyValue = pair.split("=", 2);
+            if (keyValue.length == 2 && name.equals(keyValue[0])) {
+                try {
+                    return java.net.URLDecoder.decode(keyValue[1], java.nio.charset.StandardCharsets.UTF_8);
+                } catch (Exception e) {
+                    return keyValue[1];
+                }
             }
         }
         return null;

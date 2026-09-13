@@ -26,12 +26,12 @@ public class AdminController {
 
     private final AdminAuthService adminAuthService;
     private final GrievanceService grievanceService;
-    private final String backendUrl;
+    private final String frontendUrl;
 
-    public AdminController(AdminAuthService adminAuthService, GrievanceService grievanceService, @Value("${kernel.backend.url:}") String backendUrl) {
+    public AdminController(AdminAuthService adminAuthService, GrievanceService grievanceService, @Value("${kernel.frontend.url:${FRONTEND_URL:http://localhost:3000}}") String frontendUrl) {
         this.adminAuthService = adminAuthService;
         this.grievanceService = grievanceService;
-        this.backendUrl = backendUrl;
+        this.frontendUrl = frontendUrl;
     }
 
     @PostMapping("/login")
@@ -83,7 +83,7 @@ public class AdminController {
 
     @PostMapping("/grievances/{id}/communication/enable")
     public CommunicationEnableResponse enableCommunication(@PathVariable String id) {
-        return grievanceService.enableCommunication(id, backendUrl);
+        return grievanceService.enableCommunication(id, frontendUrl);
     }
 
     @PostMapping("/grievances/{id}/communication/close")

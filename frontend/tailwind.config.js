@@ -24,13 +24,15 @@ export default {
         border: 'var(--border)',
       },
       fontFamily: {
-        cinematic: ['"Inter"', 'sans-serif'],
+        cinematic: ['"Cormorant Garamond"', 'serif'],
+        sans: ['"Inter"', 'sans-serif'],
         pixel: ['"Press Start 2P"', 'monospace'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       animation: {
         'glitch': 'glitch 1s linear infinite',
         'scanline': 'scanline 8s linear infinite',
+        'float': 'float 6s ease-in-out infinite',
       },
       keyframes: {
         glitch: {
@@ -41,6 +43,10 @@ export default {
         scanline: {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateY(100%)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
         }
       }
     },

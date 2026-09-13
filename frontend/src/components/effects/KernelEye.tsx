@@ -4,77 +4,91 @@ import { useNavigate } from 'react-router-dom';
 export default function KernelEye() {
   const navigate = useNavigate();
   
-  const [, setClicks] = useState(0);
   const [resonance, setResonance] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
-  
-  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [keySequence, setKeySequence] = useState<number>(0);
-  
+  const [keySequence, setKeySequence] = useState(0);
+
+  const clicksRef = useRef(0);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const resonanceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const TARGET_SEQUENCE = ['K', 'E', 'R', 'N', 'E', 'L'];
   
-  // Mobile swipe tracking
+  // Mobile swipe detection
   const touchStartY = useRef<number | null>(null);
-  const touchSwiped = useRef<boolean>(false);
 
-  const handleEyeClick = () => {
+  // 1. Listen for 3 clicks anywhere on the page
+  useEffect(() => {
     if (unlocked) return;
-    
-    // If resonance is active and we're on mobile, tapping the eye again after a swipe unlocks it
-    if (resonance && touchSwiped.current) {
-      triggerUnlock();
-      return;
-    }
 
-    if (resonance) return; // Ignore clicks if already resonating but not swiped
-
-    setClicks(prev => {
-      const newCount = prev + 1;
-      if (newCount === 3) {
-        setResonance(true);
-        return 0;
+    const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      // Ignore clicks inside form inputs or buttons to avoid interfering with normal interactions
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
       }
-      return newCount;
-    });
 
-    if (clickTimeoutRef.current) {
-      clearTimeout(clickTimeoutRef.current);
-    }
-    
-    clickTimeoutRef.current = setTimeout(() => {
-      setClicks(0);
-      setResonance(false);
-      setKeySequence(0);
-      touchSwiped.current = false;
-    }, 5000); // Reset after 5 seconds of inactivity
-  };
+      clicksRef.current += 1;
 
-  const triggerUnlock = () => {
-    setUnlocked(true);
-    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
-  };
+      if (clicksRef.current >= 3) {
+        clicksRef.current = 0;
+        setResonance(true);
+        setKeySequence(0);
 
+        if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+        if (resonanceTimerRef.current) clearTimeout(resonanceTimerRef.current);
+
+        // User has 8 seconds to enter SHIFT + K E R N E L
+        resonanceTimerRef.current = setTimeout(() => {
+          setResonance(false);
+          setKeySequence(0);
+        }, 8000);
+        return;
+      }
+
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+      clickTimerRef.current = setTimeout(() => {
+        clicksRef.current = 0;
+      }, 2500); // 3 clicks must occur within 2.5 seconds
+    };
+
+    window.addEventListener('click', handleGlobalClick);
+    return () => {
+      window.removeEventListener('click', handleGlobalClick);
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+      if (resonanceTimerRef.current) clearTimeout(resonanceTimerRef.current);
+    };
+  }, [unlocked]);
+
+  // 2. Listen for SHIFT + K E R N E L when resonance is active
   useEffect(() => {
     if (!resonance || unlocked) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept if typing in an input or textarea
       const activeElement = document.activeElement;
       if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || (activeElement as HTMLElement).isContentEditable)) {
         return;
       }
 
+      if (e.key === 'Shift') {
+        return; // Ignore lone Shift presses
+      }
+
       if (e.shiftKey && e.key.toUpperCase() === TARGET_SEQUENCE[keySequence]) {
         const nextSequence = keySequence + 1;
         if (nextSequence === TARGET_SEQUENCE.length) {
-          triggerUnlock();
+          try {
+            sessionStorage.setItem('kernel_root_unlocked', 'true');
+          } catch {}
+          setUnlocked(true);
+          setResonance(false);
+          setKeySequence(0);
+          if (resonanceTimerRef.current) clearTimeout(resonanceTimerRef.current);
         } else {
           setKeySequence(nextSequence);
         }
-      } else if (e.key === 'Shift') {
-        // Just pressing shift is fine, do nothing
       } else {
-        // Wrong key pressed
+        // Wrong key typed
         setKeySequence(0);
       }
     };
@@ -83,7 +97,7 @@ export default function KernelEye() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [resonance, keySequence, unlocked]);
 
-  // Mobile interaction listeners on the window (since they might swipe outside the eye)
+  // 3. Mobile swipe gesture equivalent when resonance is active
   useEffect(() => {
     if (!resonance || unlocked) return;
 
@@ -91,45 +105,73 @@ export default function KernelEye() {
       touchStartY.current = e.touches[0].clientY;
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!touchStartY.current) return;
-      const currentY = e.touches[0].clientY;
-      const diffY = currentY - touchStartY.current;
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (touchStartY.current === null) return;
+      const endY = e.changedTouches[0].clientY;
+      const diffY = endY - touchStartY.current;
       
-      // Swipe down
-      if (diffY > 50) {
-        touchSwiped.current = true;
+      // Swipe down gesture
+      if (diffY > 60) {
+        try {
+          sessionStorage.setItem('kernel_root_unlocked', 'true');
+        } catch {}
+        setUnlocked(true);
+        setResonance(false);
+        if (resonanceTimerRef.current) clearTimeout(resonanceTimerRef.current);
       }
-    };
-
-    const handleTouchEnd = () => {
       touchStartY.current = null;
     };
 
     window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchmove', handleTouchMove);
     window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [resonance, unlocked]);
 
+  // If unlocked, render the cinematic fullscreen ROOT ACCESS overlay
   if (unlocked) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md transition-all duration-1000">
-        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdGggZD0iTTAgMGg0MHY0MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwdjFIMHptMCAyMGg0MHYxSDB6TTEwIDB2NDBoLTFWMHptMjAgMHY0MGgtMVYweiIgZmlsbD0iIzAwZmZmZiIvPjwvc3ZnPg==')] animate-pulse" style={{ backgroundSize: '40px 40px' }} />
+      <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/95 backdrop-blur-xl transition-all duration-700 select-none">
+        {/* Fractured geometric background pattern */}
+        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#34d399_1px,transparent_1px)] [background-size:24px_24px] animate-pulse" />
         
-        <div className="relative flex flex-col items-center animate-[glitch_1s_ease-in-out_infinite]">
-          <h2 className="text-kernel-cyan font-pixel text-xl tracking-[0.5em] mb-4 opacity-50">SCHEMA DETECTED</h2>
-          <h1 className="text-white font-pixel text-4xl md:text-6xl tracking-widest mb-12 drop-shadow-[0_0_15px_rgba(0,255,255,1)]">ROOT ACCESS</h1>
-          <p className="text-kernel-gray font-mono mb-8 opacity-80">"...you found the layer underneath."</p>
+        {/* Close overlay button */}
+        <button 
+          onClick={() => setUnlocked(false)}
+          className="absolute top-8 right-8 text-gray-400 hover:text-white font-sans text-sm tracking-widest px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/30 transition-colors cursor-pointer"
+        >
+          ✕ CLOSE
+        </button>
+
+        <div className="relative flex flex-col items-center text-center p-8 max-w-xl animate-[glitch_1s_ease-in-out]">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 mb-6">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span className="font-pixel text-[9px] tracking-[0.3em] text-emerald-400 uppercase">
+              SCHEMA DETECTED
+            </span>
+          </div>
+
+          <h1 className="font-cinematic text-5xl md:text-7xl text-white font-normal tracking-tight mb-4 drop-shadow-[0_0_25px_rgba(52,211,153,0.7)]">
+            ROOT ACCESS
+          </h1>
+
+          <p className="font-sans text-gray-300 text-sm md:text-base mb-10 max-w-md italic opacity-90">
+            "...you found the layer underneath."
+          </p>
           
           <button 
-            onClick={() => navigate('/admin')}
-            className="px-8 py-4 bg-transparent border-2 border-kernel-cyan text-kernel-cyan font-pixel hover:bg-kernel-cyan hover:text-black transition-all duration-300 tracking-widest shadow-[0_0_20px_rgba(0,255,255,0.2)] hover:shadow-[0_0_30px_rgba(0,255,255,0.6)] cursor-pointer"
+            onClick={() => {
+              try {
+                sessionStorage.setItem('kernel_root_unlocked', 'true');
+                sessionStorage.removeItem('adminToken');
+                localStorage.removeItem('adminToken');
+              } catch {}
+              navigate('/admin');
+            }}
+            className="px-8 py-4 bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300 font-pixel hover:bg-emerald-400 hover:text-black transition-all duration-300 tracking-widest text-xs shadow-[0_0_25px_rgba(52,211,153,0.3)] hover:shadow-[0_0_40px_rgba(52,211,153,0.8)] cursor-pointer rounded-lg"
           >
             [ ACCESS CORE ]
           </button>
@@ -138,32 +180,6 @@ export default function KernelEye() {
     );
   }
 
-  return (
-    <div className="relative flex flex-col items-center justify-center my-8 select-none">
-      <div 
-        className={`relative w-16 h-16 md:w-24 md:h-24 cursor-crosshair flex items-center justify-center transition-all duration-500 ${resonance ? 'scale-110 drop-shadow-[0_0_30px_rgba(0,255,255,0.8)]' : 'hover:scale-105 drop-shadow-[0_0_10px_rgba(0,255,255,0.3)]'}`}
-        onClick={handleEyeClick}
-        onTouchEnd={handleEyeClick}
-      >
-        {/* Abstract Eye / Visor Geometric Shape */}
-        <div className="absolute inset-0 bg-kernel-cyan/10 rounded-full animate-pulse" />
-        <div className="w-full h-2/3 border-t-4 border-b-4 border-kernel-cyan rounded-[100%] absolute" />
-        <div className={`w-4 h-4 md:w-6 md:h-6 bg-kernel-cyan rounded-full transition-all duration-300 ${resonance ? 'animate-ping opacity-100' : 'opacity-80'}`} />
-        
-        {/* Resonance indicators */}
-        {resonance && (
-          <>
-            <div className="absolute -inset-4 border border-kernel-cyan/30 rounded-full animate-[spin_4s_linear_infinite]" />
-            <div className="absolute -inset-8 border border-dashed border-kernel-cyan/20 rounded-full animate-[spin_8s_linear_infinite_reverse]" />
-          </>
-        )}
-      </div>
-
-      {resonance && (
-        <div className="absolute top-full mt-4 text-[10px] text-kernel-cyan/50 font-pixel tracking-widest animate-fade-in pointer-events-none">
-          resonance detected...
-        </div>
-      )}
-    </div>
-  );
+  // Completely invisible when idle or listening
+  return null;
 }

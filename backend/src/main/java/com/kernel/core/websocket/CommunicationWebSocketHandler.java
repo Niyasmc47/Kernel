@@ -42,10 +42,12 @@ public class CommunicationWebSocketHandler {
 
         ChatMessage.SenderRole role = ChatMessage.SenderRole.valueOf(roleStr);
         message.setSender(role);
-        message.setType(ChatMessage.MessageType.MESSAGE);
+        if (message.getType() == null) {
+            message.setType(ChatMessage.MessageType.MESSAGE);
+        }
         message.setTimestamp(Instant.now());
 
-        logger.info("Message routed for session ID: {}", sessionId);
+        logger.info("Message routed for session ID: {} (type: {}, sender: {})", sessionId, message.getType(), role);
 
         messagingTemplate.convertAndSend("/topic/communication/" + sessionId, message);
     }
@@ -56,7 +58,22 @@ public class CommunicationWebSocketHandler {
         Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
         if (sessionAttributes != null && sessionAttributes.containsKey("sessionId")) {
             String sessionId = (String) sessionAttributes.get("sessionId");
-            logger.info("Session connected: {}", sessionId);
+            String roleStr = (String) sessionAttributes.get("role");
+            logger.info("Session connected: {} (role: {})", sessionId, roleStr);
+            if (roleStr != null) {
+                try {
+                    var session = communicationSessionService.getSessionById(sessionId);
+                    if ("ADMIN".equals(roleStr)) {
+                        session.setAdminConnected(true);
+                    } else if ("VISITOR".equals(roleStr)) {
+                        session.setVisitorConnected(true);
+                    }
+                    ChatMessage joinMsg = new ChatMessage(ChatMessage.MessageType.JOIN, ChatMessage.SenderRole.valueOf(roleStr), roleStr + " connected to channel.");
+                    messagingTemplate.convertAndSend("/topic/communication/" + sessionId, joinMsg);
+                } catch (Exception e) {
+                    // Ignore
+                }
+            }
         }
     }
 
@@ -66,9 +83,9 @@ public class CommunicationWebSocketHandler {
         Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
         if (sessionAttributes != null && sessionAttributes.containsKey("sessionId")) {
             String sessionId = (String) sessionAttributes.get("sessionId");
-            logger.info("Session disconnected: {}", sessionId);
-            
             String roleStr = (String) sessionAttributes.get("role");
+            logger.info("Session disconnected: {} (role: {})", sessionId, roleStr);
+            
             if (roleStr != null) {
                 try {
                     var session = communicationSessionService.getSessionById(sessionId);
@@ -77,6 +94,8 @@ public class CommunicationWebSocketHandler {
                     } else if ("VISITOR".equals(roleStr)) {
                         session.setVisitorConnected(false);
                     }
+                    ChatMessage leaveMsg = new ChatMessage(ChatMessage.MessageType.LEAVE, ChatMessage.SenderRole.valueOf(roleStr), roleStr + " left the channel.");
+                    messagingTemplate.convertAndSend("/topic/communication/" + sessionId, leaveMsg);
                 } catch (Exception e) {
                     // Ignore
                 }

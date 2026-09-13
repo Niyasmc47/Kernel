@@ -4,58 +4,59 @@
 
 @layer base {
   :root {
-    --background: #f8fafc;
-    --foreground: #0f172a;
-    --primary: #0284c7;
+    --background: #fefffc;
+    --foreground: #171717;
+    --card: #ffffff;
+    --card-foreground: #2c2c2c;
+    --border: #dee2de;
+    --primary: #10b981;
     --primary-foreground: #ffffff;
-    --border: #e2e8f0;
+    --muted: #f9faf7;
+    --muted-foreground: #646464;
+    color-scheme: light;
   }
   
   .dark {
-    --background: #0B0C10;
-    --foreground: #C5C6C7;
-    --primary: #66FCF1;
-    --primary-foreground: #0B0C10;
-    --border: #1F2833;
+    --background: #070a0f;
+    --foreground: #e2e8f0;
+    --card: #0d1219;
+    --card-foreground: #f8fafc;
+    --border: rgba(255, 255, 255, 0.08);
+    --primary: #34d399;
+    --primary-foreground: #070a0f;
+    --muted: #111722;
+    --muted-foreground: #94a3b8;
+    color-scheme: dark;
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  @apply bg-background text-foreground font-cinematic antialiased selection:bg-kernel-cyan selection:text-kernel-navy;
+  @apply bg-background text-foreground font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-300;
   overflow-x: hidden;
 }
 
-/* Custom Scrollbar for Chat */
+/* Custom Minimal Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-transparent;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-kernel-dark rounded-full;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-kernel-teal;
+  background: rgba(52, 211, 153, 0.4);
 }
 
-/* Utilities */
-.text-shadow-cyan {
-  text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+/* Very subtle texture overlay (1% opacity max, not a dominant scanline or grid) */
+.subtle-grain-overlay {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
 }
-
-.text-shadow-violet {
-  text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-}
-
-.scanline-overlay {
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0),
-    rgba(255,255,255,0) 50%,
-    rgba(0,0,0,0.1) 50%,
-    rgba(0,0,0,0.1)
-  );
-  background-size: 100% 4px;
-}
-

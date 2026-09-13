@@ -13,15 +13,27 @@ spring:
     default-property-inclusion: non_null
     serialization:
       write-dates-as-timestamps: false
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${GMAIL_USERNAME:niyas36et@gmail.com}
+    password: ${GMAIL_APP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 7000
+          timeout: 7000
+          writetimeout: 7000
 
 kernel:
   gemini:
     api-key: ${GEMINI_API_KEY}
     model: ${GEMINI_MODEL:gemini-1.5-flash}
     base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com/v1beta/models}
-  resend:
-    api-key: ${RESEND_API_KEY}
-    from-email: ${RESEND_FROM_EMAIL}
   admin:
     password: ${ADMIN_PASSWORD}
   security:
@@ -33,6 +45,8 @@ kernel:
     session-ttl-minutes: ${COMMUNICATION_SESSION_TTL_MINUTES:60}
   conversation:
     session-ttl-minutes: ${CONVERSATION_SESSION_TTL_MINUTES:30}
+  frontend:
+    url: ${FRONTEND_URL:http://localhost:3000}
   backend:
     url: ${BACKEND_URL:http://localhost:8080}
 

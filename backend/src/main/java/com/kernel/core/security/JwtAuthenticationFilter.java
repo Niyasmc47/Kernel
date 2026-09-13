@@ -24,8 +24,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+        if (header != null && !header.isBlank()) {
+            String token = header.startsWith("Bearer ") ? header.substring(7).trim() : header.trim();
             if (adminAuthService.validateToken(token)) {
                 String subject = adminAuthService.extractSubject(token);
                 AdminAuthenticationToken auth = new AdminAuthenticationToken(subject);
