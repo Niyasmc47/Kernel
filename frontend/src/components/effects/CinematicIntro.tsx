@@ -117,45 +117,48 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
             </span>
           </div>
 
-          {/* Sound Toggle Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            onClick={toggleSound}
-            className={`absolute bottom-6 left-6 sm:bottom-8 sm:left-8 z-50 px-4 py-2.5 rounded-full border backdrop-blur-xl text-xs font-mono tracking-wider uppercase transition-all duration-300 flex items-center space-x-2 shadow-2xl cursor-pointer ${
-              isMuted
-                ? 'border-amber-400/40 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60 hover:border-amber-300 animate-pulse'
-                : 'border-emerald-500/30 bg-black/60 text-emerald-400 hover:bg-black/80 hover:border-emerald-400'
-            }`}
-          >
-            {isMuted ? (
-              <>
-                <VolumeX className="w-4 h-4" />
-                <span>UNMUTE AUDIO (CLICK TO HEAR)</span>
-              </>
-            ) : (
-              <>
-                <Volume2 className="w-4 h-4 text-emerald-400 animate-pulse" />
-                <span>AUDIO ON</span>
-              </>
-            )}
-          </motion.button>
+          {/* Bottom Bar Responsive Controls */}
+          <div className="absolute bottom-4 sm:bottom-8 inset-x-4 sm:inset-x-8 z-50 flex items-center justify-between pointer-events-none">
+            {/* Sound Toggle Button */}
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              onClick={toggleSound}
+              className={`pointer-events-auto px-3 py-2 sm:px-4 sm:py-2.5 rounded-full border backdrop-blur-xl text-[10px] sm:text-xs font-mono tracking-wider uppercase transition-all duration-300 flex items-center space-x-1.5 sm:space-x-2 shadow-2xl cursor-pointer ${
+                isMuted
+                  ? 'border-amber-400/40 bg-amber-950/60 text-amber-300 hover:bg-amber-900/60 hover:border-amber-300 animate-pulse'
+                  : 'border-emerald-500/30 bg-black/60 text-emerald-400 hover:bg-black/80 hover:border-emerald-400'
+              }`}
+            >
+              {isMuted ? (
+                <>
+                  <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span>UNMUTE AUDIO</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 animate-pulse shrink-0" />
+                  <span>AUDIO ON</span>
+                </>
+              )}
+            </motion.button>
 
-          {/* Skip Intro Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleFinish();
-            }}
-            className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 px-5 py-2.5 rounded-full border border-white/15 bg-black/50 hover:bg-black/80 hover:border-white/40 backdrop-blur-xl text-white/70 hover:text-white text-xs font-sans tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer shadow-2xl flex items-center space-x-2"
-          >
-            <span>Skip Intro</span>
-            <SkipForward className="w-3.5 h-3.5" />
-          </motion.button>
+            {/* Skip Intro Button */}
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFinish();
+              }}
+              className="pointer-events-auto px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-full border border-white/15 bg-black/60 hover:bg-black/80 hover:border-white/40 backdrop-blur-xl text-white/80 hover:text-white text-[10px] sm:text-xs font-sans tracking-[0.15em] sm:tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer shadow-2xl flex items-center space-x-1.5 sm:space-x-2 shrink-0"
+            >
+              <span>Skip Intro</span>
+              <SkipForward className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            </motion.button>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

@@ -133,11 +133,11 @@ export default function AdminCommandCenter() {
   });
 
   return (
-    <div className="min-h-screen bg-[#070a0f] text-gray-200 p-6 md:p-10 font-sans">
+    <div className="min-h-screen bg-[#070a0f] text-gray-200 p-4 sm:p-6 md:p-10 font-sans">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-white/10 pb-5">
-          <div className="flex items-center space-x-4">
-            <div className="relative w-12 h-12 flex-shrink-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-white/10 pb-5">
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
               <div className="absolute inset-0 rounded-xl bg-emerald-500/20 blur-sm"></div>
               <img 
                 src="/kernel-logo.jpg" 
@@ -146,51 +146,55 @@ export default function AdminCommandCenter() {
               />
             </div>
             <div>
-              <div className="flex items-center space-x-2 mb-1">
+              <div className="flex items-center space-x-2 mb-0.5 sm:mb-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <div className="font-pixel text-[9px] text-emerald-400 tracking-[0.2em]">
+                <div className="font-pixel text-[8px] sm:text-[9px] text-emerald-400 tracking-[0.2em] uppercase">
                   SEC-CLEARANCE // LEVEL 5 • FULL LATTICE HISTORY
                 </div>
               </div>
-              <h1 className="text-3xl font-cinematic text-white font-normal">COMMAND CENTER</h1>
+              <h1 className="text-2xl sm:text-3xl font-cinematic text-white font-normal">COMMAND CENTER</h1>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
-            <div className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-300">
-              SIGNALS LOGGED: <span className="text-emerald-400 font-bold ml-1">{grievances?.length || 0}</span>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <div className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] sm:text-xs font-mono text-gray-300">
+              LOGGED: <span className="text-emerald-400 font-bold ml-1">{grievances?.length || 0}</span>
             </div>
-            <Button 
-              variant="outline"
-              size="sm"
-              onClick={() => refetch()}
-              disabled={isFetching}
-              className="text-xs"
-            >
-              {isFetching ? 'SYNCING...' : '🔄 REFRESH'}
-            </Button>
-            <Button 
-              variant="ghost" 
-              onClick={() => { 
-                setToken(''); 
-                setAuthToken(null);
-                sessionStorage.removeItem('kernel_root_unlocked');
-                navigate('/', { replace: true });
-              }}
-            >
-              LOGOUT
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                disabled={isFetching}
+                className="text-xs px-2.5 py-1"
+              >
+                {isFetching ? 'SYNCING...' : '🔄 REFRESH'}
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="text-xs px-2.5 py-1"
+                onClick={() => { 
+                  setToken(''); 
+                  setAuthToken(null);
+                  sessionStorage.removeItem('kernel_root_unlocked');
+                  navigate('/', { replace: true });
+                }}
+              >
+                LOGOUT
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Filters & Search Bar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
           {/* Status Filter Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/10">
+          <div className="flex flex-wrap items-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/10 overflow-x-auto">
             {['ALL', 'NEW', 'REVIEWING', 'RESOLVED', 'CLOSED'].map((st) => (
               <button
                 key={st}
                 onClick={() => setFilterStatus(st)}
-                className={`px-3 py-1 rounded-lg text-xs font-mono tracking-wider transition-all cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                   filterStatus === st
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-semibold'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -202,13 +206,13 @@ export default function AdminCommandCenter() {
           </div>
 
           {/* Search Box */}
-          <div className="relative">
+          <div className="relative w-full sm:w-72">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search history by name, location, or issue..."
-              className="w-full sm:w-72 bg-white/5 border border-white/10 rounded-xl px-3.5 py-1.5 text-xs text-white placeholder-gray-500 outline-none focus:border-emerald-400/60 transition-all font-sans"
+              placeholder="Search by name, location, or issue..."
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2 text-base sm:text-xs text-white placeholder-gray-500 outline-none focus:border-emerald-400/60 transition-all font-sans"
             />
             {searchQuery && (
               <button
@@ -221,7 +225,98 @@ export default function AdminCommandCenter() {
           </div>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md">
+        {/* Mobile Cards View (< md screens) */}
+        <div className="md:hidden space-y-3.5 mb-8">
+          {filteredGrievances?.map((g: any) => (
+            <div 
+              key={g.id}
+              className="p-4 rounded-2xl bg-black/50 border border-white/10 backdrop-blur-md shadow-lg space-y-3"
+            >
+              <div className="flex items-start justify-between gap-2 border-b border-white/5 pb-2.5">
+                <div>
+                  <div className="font-semibold text-white text-sm">{g.name}</div>
+                  <div className="text-xs text-gray-400 font-mono break-all">{g.email}</div>
+                  <div className="text-[11px] text-gray-400 mt-0.5">
+                    {g.location || 'Unknown location'} {g.age ? `• Age: ${g.age}` : ''}
+                  </div>
+                </div>
+                <div className="flex flex-col items-end space-y-1">
+                  <span className={`px-2 py-0.5 rounded text-[10px] border font-mono font-bold ${
+                    g.urgency === 'CRITICAL' ? 'border-red-500/40 bg-red-500/20 text-red-400 animate-pulse' :
+                    g.urgency === 'HIGH' ? 'border-orange-500/40 bg-orange-500/20 text-orange-400' :
+                    'border-white/10 bg-white/5 text-gray-300'
+                  }`}>
+                    {g.urgency}
+                  </span>
+                  <span className="text-[10px] font-mono text-gray-500">
+                    {formatDate(g.createdAt)}
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs font-mono text-emerald-400/90 mb-1">
+                  CATEGORY: {g.category}
+                </div>
+                <p className="text-xs text-gray-200 leading-relaxed bg-white/[0.02] p-2.5 rounded-xl border border-white/5">
+                  {g.aiSummary || g.originalGrievance || 'No summary available'}
+                </p>
+              </div>
+
+              {g.voiceNoteBase64 && (
+                <div className="p-2 rounded-xl bg-emerald-950/20 border border-emerald-500/20">
+                  <span className="text-[10px] font-mono text-emerald-400 block mb-1">
+                    🎙️ VOICE RECORDING:
+                  </span>
+                  <audio 
+                    controls 
+                    src={g.voiceNoteBase64.startsWith('data:') ? g.voiceNoteBase64 : `data:${g.voiceNoteContentType || 'audio/webm'};base64,${g.voiceNoteBase64}`} 
+                    className="h-7 w-full rounded" 
+                  />
+                </div>
+              )}
+
+              <div className="flex items-center justify-between pt-2 border-t border-white/5 gap-2">
+                <span className={`px-2 py-0.5 rounded text-[11px] border font-mono ${
+                  g.status === 'NEW' 
+                    ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300'
+                    : g.status === 'RESOLVED'
+                    ? 'border-blue-500/40 bg-blue-500/15 text-blue-300'
+                    : 'border-white/10 bg-white/5 text-gray-400'
+                }`}>
+                  {g.status}
+                </span>
+
+                <div className="flex items-center space-x-1.5">
+                  {g.communicationStatus === 'DISABLED' && (
+                    <Button size="sm" variant="outline" className="text-xs py-1" onClick={() => enableCommMutation.mutate(g.id)}>
+                      ENABLE COMM
+                    </Button>
+                  )}
+                  {g.communicationStatus === 'ACTIVE' && (
+                    <div className="flex items-center space-x-1.5">
+                      <Button size="sm" variant="secondary" className="text-xs py-1" onClick={() => window.open(`/communicate?token=kernelctygz&grievanceId=${g.id}`)}>
+                        JOIN COMM
+                      </Button>
+                      <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300 text-xs px-2 py-1" onClick={() => closeCommMutation.mutate(g.id)}>
+                        CLOSE
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {(!filteredGrievances || filteredGrievances.length === 0) && (
+            <div className="p-8 text-center text-gray-500 font-sans text-xs bg-black/40 rounded-2xl border border-white/10">
+              No matching grievances found in the Lattice history.
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Table View (>= md screens) */}
+        <div className="hidden md:block overflow-x-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
               <tr className="border-b border-white/10 text-gray-400 font-sans text-xs uppercase tracking-wider">

@@ -10,7 +10,7 @@ export default function MissionSection({ onReturnToHero }: MissionSectionProps) 
   return (
     <section 
       id="mission" 
-      className="relative w-full min-h-[85vh] flex items-center justify-center py-28 md:py-36 overflow-hidden text-center"
+      className="relative w-full min-h-[70vh] md:min-h-[85vh] flex items-center justify-center py-16 sm:py-24 md:py-36 overflow-hidden text-center"
     >
       {/* Background panoramic sunrise landscape */}
       <div className="absolute inset-0 z-0 select-none pointer-events-none">
@@ -26,32 +26,32 @@ export default function MissionSection({ onReturnToHero }: MissionSectionProps) 
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent,rgba(248,250,247,0.85))] dark:bg-[radial-gradient(ellipse_at_center,transparent,rgba(7,10,15,0.9))] transition-colors duration-500" />
       </div>
 
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-6 sm:px-8 flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col items-center">
         
-        <AnimatedContent direction="down" className="mb-4">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 backdrop-blur-md shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="font-mono text-xs tracking-wider text-emerald-700 dark:text-emerald-400 uppercase font-semibold">
+        <AnimatedContent direction="down" className="mb-3 sm:mb-4">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 backdrop-blur-md shadow-sm">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500" />
+            <span className="font-mono text-[10px] sm:text-xs tracking-wider text-emerald-700 dark:text-emerald-400 uppercase font-semibold">
               STANDING BY TO HELP
             </span>
           </div>
         </AnimatedContent>
 
-        <AnimatedContent direction="up" delay={0.1} className="mb-6">
-          <h2 className="font-cinematic text-5xl sm:text-6xl lg:text-7xl font-normal text-gray-900 dark:text-white tracking-tight leading-[1.05]">
+        <AnimatedContent direction="up" delay={0.1} className="mb-4 sm:mb-6">
+          <h2 className="font-cinematic text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-gray-900 dark:text-white tracking-tight leading-[1.05]">
             THE MISSION <span className="italic text-emerald-600 dark:text-emerald-400">CONTINUES.</span>
           </h2>
         </AnimatedContent>
 
-        <AnimatedContent direction="up" delay={0.2} className="max-w-2xl mb-10">
-          <p className="font-sans text-base sm:text-lg text-gray-700 dark:text-gray-200 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+        <AnimatedContent direction="up" delay={0.2} className="max-w-2xl mb-8 sm:mb-10">
+          <p className="font-sans text-xs sm:text-base md:text-lg text-gray-700 dark:text-gray-200 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
             Theo operates in the quiet spaces where institutions fail and authority looks away.
             Whether you face systemic abuse, housing intimidation, or a crisis too strange for ordinary channels—Theo is listening.
           </p>
         </AnimatedContent>
 
         <AnimatedContent direction="up" delay={0.3}>
-          <PixelMagnet onClick={onReturnToHero} className="text-base px-8 py-3.5 shadow-[0_0_30px_rgba(52,211,153,0.3)]">
+          <PixelMagnet onClick={onReturnToHero} className="text-xs sm:text-base px-6 py-2.5 sm:px-8 sm:py-3.5 shadow-[0_0_30px_rgba(52,211,153,0.3)]">
             Speak with KERNEL
           </PixelMagnet>
         </AnimatedContent>

@@ -217,53 +217,53 @@ export default function Communicate() {
       <div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full bg-cyan-500/5 blur-[120px] pointer-events-none" />
 
       {/* Top Header */}
-      <header className="relative z-10 border-b border-white/10 bg-black/40 backdrop-blur-md px-6 py-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+      <header className="relative z-10 border-b border-white/10 bg-black/40 backdrop-blur-md px-3 sm:px-6 py-3 sm:py-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
             <button
               onClick={() => navigate(isCurrentAdmin ? '/admin' : '/')}
-              className="text-gray-400 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5"
+              className="text-gray-400 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5 flex-shrink-0"
               title="Back"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <div>
-              <div className="flex items-center space-x-2">
+            <div className="min-w-0">
+              <div className="flex items-center space-x-1.5 sm:space-x-2">
                 <span
-                  className={`w-2 h-2 rounded-full ${
+                  className={`w-2 h-2 rounded-full flex-shrink-0 ${
                     connected ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'bg-amber-400 animate-pulse'
                   }`}
                 />
-                <h1 className="font-cinematic text-lg text-white font-normal tracking-wide">
-                  ONE-ON-ONE SECURE RELAY
+                <h1 className="font-cinematic text-sm sm:text-base md:text-lg text-white font-normal tracking-wide truncate">
+                  SECURE RELAY
                 </h1>
               </div>
-              <div className="font-mono text-[10px] text-gray-500 flex items-center space-x-2 mt-0.5">
-                <span>SESSION: {sessionData.sessionId.substring(0, 8)}...</span>
+              <div className="font-mono text-[9px] sm:text-[10px] text-gray-500 flex items-center space-x-1.5 sm:space-x-2 mt-0.5 truncate">
+                <span>ID: {sessionData.sessionId.substring(0, 6)}...</span>
                 <span>•</span>
                 <span className={connected ? 'text-emerald-400' : 'text-amber-400'}>
-                  {connected ? 'LIVE ENCRYPTED' : 'CONNECTING...'}
+                  {connected ? 'LIVE' : 'CONNECTING...'}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 flex-shrink-0">
             <div
-              className={`px-3 py-1 rounded-full text-[10px] font-mono border flex items-center space-x-1.5 ${
+              className={`px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-mono border flex items-center space-x-1 sm:space-x-1.5 ${
                 isCurrentAdmin
                   ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
                   : 'border-cyan-500/30 bg-cyan-500/10 text-cyan-300'
               }`}
             >
-              <Shield className="w-3 h-3" />
-              <span>ROLE: {isCurrentAdmin ? 'KERNEL // CENTRAL' : 'VISITOR // CITIZEN'}</span>
+              <Shield className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+              <span>{isCurrentAdmin ? 'KERNEL' : 'CITIZEN'}</span>
             </div>
 
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-gray-400 hover:text-red-400"
+              className="text-[11px] sm:text-xs text-gray-400 hover:text-red-400 px-2 sm:px-3 h-8"
               onClick={() => navigate(isCurrentAdmin ? '/admin' : '/')}
             >
               EXIT
@@ -273,23 +273,23 @@ export default function Communicate() {
       </header>
 
       {/* Ephemeral Privacy Guarantee Notice */}
-      <div className="relative z-10 bg-emerald-950/20 border-b border-emerald-500/10 py-1.5 px-4 text-center">
-        <div className="flex items-center justify-center space-x-2 text-[11px] font-mono text-emerald-400/80">
-          <Lock className="w-3 h-3 text-emerald-400" />
-          <span>EPHEMERAL CHANNEL // Zero logs retained. Transmissions exist in-memory only.</span>
+      <div className="relative z-10 bg-emerald-950/20 border-b border-emerald-500/10 py-1.5 px-3 sm:px-4 text-center">
+        <div className="flex items-center justify-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-[11px] font-mono text-emerald-400/80">
+          <Lock className="w-3 h-3 flex-shrink-0 text-emerald-400" />
+          <span className="truncate sm:whitespace-normal">EPHEMERAL // Zero logs stored. Transmissions exist in memory only.</span>
         </div>
       </div>
 
       {/* Main Chat Container */}
-      <main className="relative z-10 flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 flex flex-col overflow-hidden">
+      <main className="relative z-10 flex-1 max-w-4xl w-full mx-auto p-3 sm:p-4 md:p-6 flex flex-col overflow-hidden">
         {/* Messages Feed */}
-        <div className="flex-1 overflow-y-auto space-y-3.5 pr-2 rounded-2xl bg-black/30 border border-white/5 p-4 backdrop-blur-md shadow-inner custom-scrollbar">
+        <div className="flex-1 overflow-y-auto space-y-3.5 pr-2 rounded-2xl bg-black/30 border border-white/5 p-3 sm:p-4 backdrop-blur-md shadow-inner custom-scrollbar">
           {messages.length === 0 && (
-            <div className="h-full flex flex-col items-center justify-center text-center p-8 space-y-3 text-gray-500">
-              <div className="w-12 h-12 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center text-emerald-400/60 animate-pulse">
-                <Radio className="w-5 h-5" />
+            <div className="h-full flex flex-col items-center justify-center text-center p-4 sm:p-8 space-y-3 text-gray-500">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center text-emerald-400/60 animate-pulse">
+                <Radio className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div className="font-pixel text-[10px] tracking-[0.2em] text-gray-400 uppercase">
+              <div className="font-pixel text-[9px] sm:text-[10px] tracking-[0.2em] text-gray-400 uppercase">
                 SECURE FREQUENCY SYNCHRONIZED
               </div>
               <p className="text-xs max-w-md font-sans text-gray-500 leading-relaxed">
@@ -302,14 +302,14 @@ export default function Communicate() {
             if (msg.type === 'JOIN' || msg.type === 'LEAVE') {
               return (
                 <div key={idx} className="flex justify-center my-2">
-                  <div className="px-3 py-1 rounded-full text-[10px] font-mono bg-white/[0.03] border border-white/5 text-gray-400 flex items-center space-x-1.5">
+                  <div className="px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-mono bg-white/[0.03] border border-white/5 text-gray-400 flex items-center space-x-1.5 max-w-[90%] truncate">
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${
+                      className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
                         msg.type === 'JOIN' ? 'bg-emerald-400' : 'bg-red-400'
                       }`}
                     />
-                    <span>{msg.content}</span>
-                    <span className="text-gray-600">• {formatTime(msg.timestamp)}</span>
+                    <span className="truncate">{msg.content}</span>
+                    <span className="text-gray-600 flex-shrink-0">• {formatTime(msg.timestamp)}</span>
                   </div>
                 </div>
               );
@@ -330,7 +330,7 @@ export default function Communicate() {
                 </div>
 
                 <div
-                  className={`max-w-[75%] md:max-w-[65%] rounded-2xl p-3.5 text-sm leading-relaxed ${
+                  className={`max-w-[85%] sm:max-w-[75%] md:max-w-[65%] rounded-2xl p-3 sm:p-3.5 text-xs sm:text-sm leading-relaxed ${
                     isMe
                       ? 'bg-emerald-950/40 border border-emerald-500/30 text-emerald-100 rounded-tr-sm shadow-[0_4px_20px_rgba(16,185,129,0.06)]'
                       : 'bg-white/[0.05] border border-white/10 text-gray-100 rounded-tl-sm shadow-[0_4px_20px_rgba(0,0,0,0.2)]'
@@ -345,15 +345,15 @@ export default function Communicate() {
         </div>
 
         {/* Input Bar */}
-        <form onSubmit={sendMessage} className="mt-4 flex items-center gap-3">
+        <form onSubmit={sendMessage} className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3">
           <div className="relative flex-1">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={connected ? 'Type a secure transmission... (Enter to send)' : 'Connecting to secure relay...'}
+              placeholder={connected ? 'Type message... (Enter to send)' : 'Connecting to relay...'}
               disabled={!connected}
-              className="w-full bg-black/60 border border-white/10 focus:border-emerald-400/60 focus:ring-1 focus:ring-emerald-400/40 text-white placeholder-gray-500 text-sm px-4 py-3.5 rounded-xl outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed font-sans"
+              className="w-full bg-black/60 border border-white/10 focus:border-emerald-400/60 focus:ring-1 focus:ring-emerald-400/40 text-white placeholder-gray-500 text-base md:text-sm px-3.5 sm:px-4 py-2.5 sm:py-3.5 rounded-xl outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed font-sans"
               autoFocus
             />
           </div>
@@ -361,9 +361,9 @@ export default function Communicate() {
           <Button
             type="submit"
             disabled={!connected || !input.trim()}
-            className="px-5 py-3.5 h-auto rounded-xl flex items-center space-x-1.5 flex-shrink-0"
+            className="px-3 sm:px-5 py-2.5 sm:py-3.5 h-auto rounded-xl flex items-center space-x-1.5 flex-shrink-0"
           >
-            <span>TRANSMIT</span>
+            <span className="hidden sm:inline">TRANSMIT</span>
             <Send className="w-3.5 h-3.5" />
           </Button>
         </form>

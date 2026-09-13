@@ -964,12 +964,12 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
   const isInputDisabled = isTyping || idStep === 'INIT' || phase === 'SUBMITTED' || phase === 'CONFIRMATION';
 
   return (
-    <div className="relative flex flex-col h-[54vh] sm:h-[58vh] min-h-[420px] max-h-[580px] w-full max-w-xl mx-auto md:ml-auto overflow-hidden bg-white/90 dark:bg-black/45 backdrop-blur-2xl rounded-2xl border border-gray-200/80 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-10 pointer-events-auto transition-colors duration-300">
+    <div className="relative flex flex-col h-[460px] sm:h-[500px] md:h-[56vh] min-h-[420px] max-h-[580px] w-full max-w-full md:max-w-xl mx-auto md:ml-auto overflow-hidden bg-white/95 dark:bg-black/60 backdrop-blur-2xl rounded-3xl border border-gray-200/90 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)] z-10 pointer-events-auto transition-colors duration-300">
       
       {/* Header bar */}
-      <div className="px-5 py-3 border-b border-gray-200/80 dark:border-white/5 flex items-center justify-between text-xs">
+      <div className="px-4 sm:px-5 py-2.5 sm:py-3 border-b border-gray-200/80 dark:border-white/5 flex items-center justify-between text-xs bg-gray-50/50 dark:bg-white/[0.02]">
         <div className="flex items-center space-x-2.5">
-          <div className="relative w-6 h-6 flex items-center justify-center">
+          <div className="relative w-6 h-6 flex items-center justify-center shrink-0">
             <img 
               src="/kernel-logo.jpg" 
               alt="Kernel Hero Sigil" 
@@ -983,13 +983,13 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
             </span>
           </div>
         </div>
-        <span className="font-mono text-[10px] text-gray-500 uppercase px-2 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200/60 dark:border-white/5">
+        <span className="font-mono text-[10px] text-gray-500 uppercase px-2 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200/60 dark:border-white/5 shrink-0">
           {lang}
         </span>
       </div>
 
       {/* Chat Timeline */}
-      <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-4 z-10 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-5 md:p-6 space-y-3.5 sm:space-y-4 z-10 scrollbar-thin">
         <AnimatePresence initial={false}>
           {messages.map((msg) => (
             <motion.div
@@ -1000,23 +1000,23 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
               className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
             >
               {msg.isSummary ? (
-                <div className="w-full my-2 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300/80 dark:border-emerald-500/30 text-emerald-950 dark:text-emerald-200 shadow-sm">
-                  <div className="font-sans font-semibold text-xs tracking-wider text-emerald-700 dark:text-emerald-400 mb-2 uppercase">
+                <div className="w-full my-2 p-3.5 sm:p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300/80 dark:border-emerald-500/30 text-emerald-950 dark:text-emerald-200 shadow-sm">
+                  <div className="font-sans font-semibold text-xs tracking-wider text-emerald-700 dark:text-emerald-400 mb-1.5 uppercase">
                     {locale.whatKernelHeard}
                   </div>
-                  <div className="font-sans text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                  <div className="font-sans text-xs sm:text-sm md:text-base leading-relaxed whitespace-pre-wrap">
                     {msg.text}
                   </div>
                 </div>
               ) : (
                 <div
-                  className={`max-w-[88%] md:max-w-[82%] rounded-xl px-4 py-2.5 transition-colors duration-200 ${
+                  className={`max-w-[90%] sm:max-w-[85%] md:max-w-[82%] rounded-2xl px-3.5 sm:px-4 py-2 sm:py-2.5 transition-colors duration-200 ${
                     msg.sender === 'user'
                       ? 'bg-gray-200/90 dark:bg-white/10 text-gray-900 dark:text-white rounded-tr-none border border-gray-300/60 dark:border-white/5 font-sans'
                       : 'bg-emerald-50/90 dark:bg-emerald-950/35 text-emerald-950 dark:text-emerald-200 rounded-tl-none border border-emerald-200/80 dark:border-emerald-500/20 font-sans'
                   }`}
                 >
-                  <p className="text-sm md:text-[15px] leading-relaxed whitespace-pre-wrap">
+                  <p className="text-xs sm:text-sm md:text-[15px] leading-relaxed whitespace-pre-wrap break-words">
                     {msg.text}
                   </p>
                 </div>
@@ -1041,7 +1041,7 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
       </div>
 
       {/* Interactive Controls & Input */}
-      <div className="p-4 border-t border-gray-200/80 dark:border-white/5 bg-gray-50/80 dark:bg-black/25 relative z-20">
+      <div className="p-3 sm:p-4 border-t border-gray-200/80 dark:border-white/5 bg-gray-50/90 dark:bg-black/40 relative z-20">
         
         {/* Hidden Audio Player for Previewing Voice Recording */}
         {audioUrl && (
@@ -1055,14 +1055,14 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
 
         {/* Attached Voice Note Banner (When recording is complete and ready to send) */}
         {audioUrl && !isRecording && (
-          <div className="mb-3 px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300 animate-in fade-in duration-200">
+          <div className="mb-2.5 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300 animate-in fade-in duration-200">
             <div className="flex items-center space-x-2">
-              <Volume2 className="w-4 h-4 text-emerald-500 animate-pulse" />
-              <span className="font-mono text-[11px] font-semibold">
-                VOICE NOTE READY ({formatRecordingTime(recordingSeconds)})
+              <Volume2 className="w-4 h-4 text-emerald-500 animate-pulse shrink-0" />
+              <span className="font-mono text-[10px] sm:text-[11px] font-semibold truncate">
+                VOICE NOTE ({formatRecordingTime(recordingSeconds)})
               </span>
             </div>
-            <div className="flex items-center space-x-1.5">
+            <div className="flex items-center space-x-1.5 shrink-0">
               <button
                 type="button"
                 onClick={togglePlayPreview}
@@ -1084,11 +1084,11 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
         )}
 
         {phase === 'CONFIRMATION' ? (
-          <div className="flex flex-col space-y-2.5">
+          <div className="flex flex-col space-y-2">
             <div className="text-xs font-medium text-gray-700 dark:text-gray-400 text-center font-sans">
               {locale.isThatRight}
             </div>
-            <div className="flex space-x-3">
+            <div className="flex space-x-2.5">
               <button
                 disabled={isTyping || submitMutation.isPending}
                 onClick={() => handleConfirm(false)}
@@ -1120,18 +1120,18 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
           </div>
         ) : isRecording ? (
           /* Live Recording Controls */
-          <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-red-950/30 border border-red-500/40 animate-pulse">
-            <div className="flex items-center space-x-2.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-              <span className="font-mono text-xs text-red-400 font-semibold">
-                RECORDING VOICE NOTE ({formatRecordingTime(recordingSeconds)})
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 p-2.5 rounded-2xl bg-red-950/40 border border-red-500/40 animate-pulse">
+            <div className="flex items-center space-x-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0" />
+              <span className="font-mono text-xs text-red-400 font-semibold truncate">
+                RECORDING ({formatRecordingTime(recordingSeconds)})
               </span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 justify-end">
               <button
                 type="button"
                 onClick={stopRecording}
-                className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-sans text-xs font-medium flex items-center space-x-1.5 shadow-md cursor-pointer transition-all"
+                className="flex-1 sm:flex-none px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-sans text-xs font-medium flex items-center justify-center space-x-1.5 shadow-md cursor-pointer transition-all"
               >
                 <Square className="w-3.5 h-3.5 fill-current" />
                 <span>Stop &amp; Attach</span>
@@ -1139,7 +1139,7 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
               <button
                 type="button"
                 onClick={discardRecording}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
                 title="Cancel Recording"
               >
                 <Trash2 className="w-4 h-4" />
@@ -1160,7 +1160,7 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
                 onKeyDown={handleKeyDown}
                 placeholder={audioUrl ? "Voice note attached! (Add text or press Send)" : placeholder}
                 disabled={isInputDisabled}
-                className="flex-1 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none resize-none transition-all disabled:opacity-50"
+                className="flex-1 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 sm:px-4 py-2 sm:py-2.5 text-base md:text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none resize-none transition-all disabled:opacity-50 min-w-0"
               />
             ) : (
               <input
@@ -1174,7 +1174,7 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
                 disabled={isInputDisabled}
-                className="flex-1 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none transition-all disabled:opacity-50"
+                className="flex-1 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 sm:px-4 py-2 sm:py-2.5 text-base md:text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none transition-all disabled:opacity-50 min-w-0"
               />
             )}
 
@@ -1185,7 +1185,7 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
                 onClick={startRecording}
                 disabled={isInputDisabled}
                 title="Record Voice Note"
-                className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-center ${
+                className={`p-2 sm:p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
                   audioUrl
                     ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
                     : 'border-gray-300 dark:border-white/10 hover:border-emerald-500/60 text-gray-600 dark:text-gray-300 hover:text-emerald-400 hover:bg-white/5'
@@ -1205,7 +1205,7 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
                 }
               }}
               disabled={isInputDisabled || (!inputValue.trim() && !audioUrl)}
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-sans font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_2px_10px_rgba(16,185,129,0.25)] flex items-center justify-center cursor-pointer"
+              className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-sans font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_2px_10px_rgba(16,185,129,0.25)] flex items-center justify-center cursor-pointer shrink-0"
             >
               {locale.sendBtn}
             </button>

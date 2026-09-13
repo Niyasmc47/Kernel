@@ -141,24 +141,24 @@ export default function KernelEye() {
         {/* Close overlay button */}
         <button 
           onClick={() => setUnlocked(false)}
-          className="absolute top-8 right-8 text-gray-400 hover:text-white font-sans text-sm tracking-widest px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/30 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 sm:top-8 sm:right-8 text-gray-400 hover:text-white font-sans text-xs sm:text-sm tracking-widest px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/30 transition-colors cursor-pointer"
         >
           ✕ CLOSE
         </button>
 
-        <div className="relative flex flex-col items-center text-center p-8 max-w-xl animate-[glitch_1s_ease-in-out]">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 mb-6">
+        <div className="relative flex flex-col items-center text-center p-4 sm:p-8 max-w-xl animate-[glitch_1s_ease-in-out]">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 mb-4 sm:mb-6">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
             <span className="font-pixel text-[9px] tracking-[0.3em] text-emerald-400 uppercase">
               SCHEMA DETECTED
             </span>
           </div>
 
-          <h1 className="font-cinematic text-5xl md:text-7xl text-white font-normal tracking-tight mb-4 drop-shadow-[0_0_25px_rgba(52,211,153,0.7)]">
+          <h1 className="font-cinematic text-4xl sm:text-5xl md:text-7xl text-white font-normal tracking-tight mb-3 sm:mb-4 drop-shadow-[0_0_25px_rgba(52,211,153,0.7)]">
             ROOT ACCESS
           </h1>
 
-          <p className="font-sans text-gray-300 text-sm md:text-base mb-10 max-w-md italic opacity-90">
+          <p className="font-sans text-gray-300 text-xs sm:text-sm md:text-base mb-8 sm:mb-10 max-w-md italic opacity-90">
             "...you found the layer underneath."
           </p>
           
@@ -171,7 +171,7 @@ export default function KernelEye() {
               } catch {}
               navigate('/admin');
             }}
-            className="px-8 py-4 bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300 font-pixel hover:bg-emerald-400 hover:text-black transition-all duration-300 tracking-widest text-xs shadow-[0_0_25px_rgba(52,211,153,0.3)] hover:shadow-[0_0_40px_rgba(52,211,153,0.8)] cursor-pointer rounded-lg"
+            className="px-6 sm:px-8 py-3.5 sm:py-4 bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300 font-pixel hover:bg-emerald-400 hover:text-black transition-all duration-300 tracking-widest text-[10px] sm:text-xs shadow-[0_0_25px_rgba(52,211,153,0.3)] hover:shadow-[0_0_40px_rgba(52,211,153,0.8)] cursor-pointer rounded-lg active:scale-95"
           >
             [ ACCESS CORE ]
           </button>

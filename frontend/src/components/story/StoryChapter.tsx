@@ -49,7 +49,7 @@ export default function StoryChapter({
   return (
     <section
       id={id}
-      className={`relative w-full min-h-[75vh] flex items-center justify-center py-20 md:py-32 ${containerBg} overflow-hidden`}
+      className={`relative w-full min-h-[65vh] md:min-h-[75vh] flex items-center justify-center py-12 sm:py-16 md:py-28 ${containerBg} overflow-hidden`}
     >
       {/* Background artwork mode */}
       {isBackground && (
@@ -64,9 +64,9 @@ export default function StoryChapter({
       )}
 
       <div
-        className={`relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 flex flex-col ${
+        className={`relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col ${
           imagePosition === 'left' ? 'lg:flex-row-reverse' : 'lg:flex-row'
-        } items-center justify-between gap-12 lg:gap-16`}
+        } items-center justify-between gap-8 sm:gap-12 lg:gap-16`}
       >
         {/* Editorial Text Column */}
         <AnimatedContent
@@ -74,7 +74,7 @@ export default function StoryChapter({
           className="flex-1 flex flex-col items-start max-w-xl"
         >
           {/* Subtle tag / classification */}
-          <div className="flex items-center space-x-3 mb-4">
+          <div className="flex items-center space-x-2.5 sm:space-x-3 mb-3 sm:mb-4">
             <span className={`font-pixel text-[9px] tracking-[0.25em] uppercase ${subtitleColor}`}>
               {subtitle || 'RECORD ENTRY'}
             </span>
@@ -86,11 +86,11 @@ export default function StoryChapter({
             )}
           </div>
 
-          <h2 className={`font-cinematic text-4xl sm:text-5xl lg:text-6xl font-normal leading-[1.08] tracking-tight mb-8 ${headingColor}`}>
+          <h2 className={`font-cinematic text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal leading-[1.08] tracking-tight mb-4 sm:mb-6 md:mb-8 ${headingColor}`}>
             {title}
           </h2>
 
-          <div className={`font-sans text-base sm:text-lg leading-relaxed space-y-4 ${textColor}`}>
+          <div className={`font-sans text-sm sm:text-base md:text-lg leading-relaxed space-y-3.5 sm:space-y-4 ${textColor}`}>
             {paragraphs.map((p, idx) => (
               <p key={idx} className="leading-relaxed">
                 {p}

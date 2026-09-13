@@ -180,15 +180,15 @@ export default function AbilitiesSection() {
             </span>
           </div>
 
-          <h2 className="font-cinematic text-4xl sm:text-5xl lg:text-6xl font-normal text-gray-900 dark:text-white mb-4 tracking-tight leading-[1.08]">
+          <h2 className="font-cinematic text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-gray-900 dark:text-white mb-3 sm:mb-4 tracking-tight leading-[1.08]">
             THEO'S POWERS &amp; <span className="italic text-emerald-600 dark:text-emerald-400">ABILITIES.</span>
           </h2>
 
-          <p className="font-sans text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-            Theo didn't ask for these abilities, but he uses them to protect people and repair what was broken. Click any power below to watch its simulation and see how it works in real-world scenarios.
+          <p className="font-sans text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 leading-relaxed">
+            Theo didn't ask for these abilities, but he uses them to protect people and repair what was broken. Tap any power below to watch its simulation and see how it works in real-world scenarios.
           </p>
 
-          <div className="flex flex-col space-y-3">
+          <div className="flex flex-col space-y-2.5 sm:space-y-3">
             {ABILITIES.map((ability, idx) => {
               const Icon = ability.icon;
               const isSelected = activeIdx === idx;
@@ -200,39 +200,39 @@ export default function AbilitiesSection() {
                     setActiveIdx(idx);
                     setIsPlaying(true);
                   }}
-                  className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between cursor-pointer group ${
+                  className={`w-full text-left p-3.5 sm:p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between cursor-pointer group ${
                     isSelected
                       ? 'border-emerald-500/80 bg-emerald-50/80 dark:bg-emerald-950/30 shadow-[0_4px_24px_rgba(16,185,129,0.18)] translate-x-1 sm:translate-x-2'
                       : 'border-gray-200/90 dark:border-white/5 bg-white dark:bg-white/[0.02] hover:border-emerald-500/40 hover:bg-gray-50/80 dark:hover:bg-white/[0.04] shadow-sm dark:shadow-none'
                   }`}
                 >
-                  <div className="flex items-start space-x-3.5 pr-4">
+                  <div className="flex items-start space-x-3 sm:space-x-3.5 pr-2 sm:pr-4 min-w-0">
                     <div 
-                      className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-transform duration-300 group-hover:scale-110"
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-transform duration-300 group-hover:scale-110"
                       style={{ 
                         backgroundColor: isSelected ? `${ability.accent}20` : 'rgba(128,128,128,0.08)',
                         color: ability.accent 
                       }}
                     >
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
 
-                    <div>
-                      <div className="font-sans font-semibold text-base sm:text-lg text-gray-900 dark:text-white tracking-tight flex items-center space-x-2">
+                    <div className="min-w-0">
+                      <div className="font-sans font-semibold text-sm sm:text-base md:text-lg text-gray-900 dark:text-white tracking-tight flex items-center space-x-2 truncate">
                         <span>{ability.name}</span>
                       </div>
-                      <div className="text-xs font-mono text-emerald-600 dark:text-emerald-400/90 font-medium mt-0.5">
+                      <div className="text-[11px] sm:text-xs font-mono text-emerald-600 dark:text-emerald-400/90 font-medium mt-0.5 truncate">
                         {ability.subname} • <span className="text-gray-500 dark:text-gray-400 font-sans font-normal">{ability.category}</span>
                       </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2 sm:line-clamp-1">
                         {ability.summary}
                       </p>
                     </div>
                   </div>
 
-                  <div className="shrink-0 flex items-center space-x-2 font-mono text-xs text-gray-400 dark:text-gray-500">
-                    <span>0{idx + 1}</span>
-                    <span className={`text-base transition-transform ${isSelected ? 'translate-x-0.5 text-emerald-600 dark:text-emerald-400' : 'text-gray-400'}`}>
+                  <div className="shrink-0 flex items-center space-x-1.5 sm:space-x-2 font-mono text-xs text-gray-400 dark:text-gray-500 ml-2">
+                    <span className="text-[11px] sm:text-xs">0{idx + 1}</span>
+                    <span className={`text-sm sm:text-base transition-transform ${isSelected ? 'translate-x-0.5 text-emerald-600 dark:text-emerald-400' : 'text-gray-400'}`}>
                       →
                     </span>
                   </div>
@@ -246,7 +246,7 @@ export default function AbilitiesSection() {
         <div className="flex-1 w-full lg:max-w-xl relative lg:sticky lg:top-24">
           <SpotlightCard 
             spotlightColor={`${activeAbility.accent}20`}
-            className="p-6 sm:p-8 border-gray-200/90 dark:border-white/10 bg-white/95 dark:bg-black/50 shadow-2xl backdrop-blur-xl rounded-3xl"
+            className="p-4 sm:p-6 md:p-8 border-gray-200/90 dark:border-white/10 bg-white/95 dark:bg-black/50 shadow-2xl backdrop-blur-xl rounded-3xl"
           >
             {/* Live Video Simulation Window */}
             <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-gray-200/50 dark:border-white/10 shadow-inner group">
