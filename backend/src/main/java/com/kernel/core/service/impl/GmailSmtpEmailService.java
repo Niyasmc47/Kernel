@@ -50,7 +50,7 @@ public class GmailSmtpEmailService implements EmailService {
         boolean hasVoiceNote = grievance.getVoiceNoteBase64() != null && !grievance.getVoiceNoteBase64().isBlank();
 
         String voiceNoteStatusHtml = hasVoiceNote 
-            ? "<li><strong>Voice Recording:</strong> Attached (Playable audio file)</li>" 
+            ? "<li style='margin-bottom: 8px; color: #38bdf8;'>🎙️ <strong style='color: #7dd3fc;'>Voice Recording:</strong> Attached for playback</li>" 
             : "";
 
         String htmlContent = String.format("""
@@ -58,33 +58,31 @@ public class GmailSmtpEmailService implements EmailService {
             <html>
             <head>
                 <meta charset="utf-8">
-                <style>
-                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070a0f; color: #e2e8f0; padding: 24px; }
-                    .card { background: #0c1017; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 16px; padding: 28px; max-width: 580px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-                    .badge { display: inline-block; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 20px; margin-bottom: 16px; }
-                    h2 { color: #ffffff; margin-top: 0; font-size: 22px; }
-                    p { font-size: 14px; line-height: 1.6; color: #94a3b8; }
-                    .details { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; margin: 20px 0; }
-                    .details li { font-size: 13px; color: #cbd5e1; margin-bottom: 6px; list-style: none; }
-                    .footer { font-size: 12px; color: #64748b; margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; }
-                </style>
             </head>
-            <body>
-                <div class="card">
-                    <div class="badge">KERNEL // MESSAGE TRANSMISSION LOGGED</div>
-                    <h2>Hello %s,</h2>
-                    <p>Theo has received your submission. Your details have been securely recorded onto the private communication relay.</p>
-                    <div class="details">
-                        <li><strong>Contact:</strong> %s</li>
-                        <li><strong>Location:</strong> %s</li>
-                        <li><strong>Category:</strong> %s</li>
-                        <li><strong>Status:</strong> %s</li>
-                        %s
+            <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070a0f; color: #f8fafc; padding: 24px; margin: 0;">
+                <div style="background-color: #0d131f; border: 1px solid #10b981; border-radius: 14px; padding: 28px; max-width: 580px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <div style="display: inline-block; background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #10b981; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; padding: 5px 12px; border-radius: 20px; margin-bottom: 18px;">
+                        KERNEL // MESSAGE TRANSMISSION LOGGED
                     </div>
-                    <p>Theo reviews incoming signals carefully. If your situation requires direct intervention or a secure line, you will receive another link directly to this email address.</p>
-                    <div class="footer">
+                    <h2 style="color: #ffffff; margin: 0 0 12px 0; font-size: 22px;">Hello %s,</h2>
+                    <p style="font-size: 14px; line-height: 1.6; color: #e2e8f0; margin-bottom: 16px;">
+                        Theo has received your submission. Your details have been securely recorded onto the private communication relay.
+                    </p>
+                    <div style="background-color: #161f30; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 18px; margin: 20px 0;">
+                        <ul style="margin: 0; padding-left: 18px; color: #f1f5f9; font-size: 13px; line-height: 1.8;">
+                            <li style="margin-bottom: 6px;"><strong style="color: #94a3b8;">Contact:</strong> <span style="color: #ffffff;">%s</span></li>
+                            <li style="margin-bottom: 6px;"><strong style="color: #94a3b8;">Location:</strong> <span style="color: #ffffff;">%s</span></li>
+                            <li style="margin-bottom: 6px;"><strong style="color: #94a3b8;">Category:</strong> <span style="color: #34d399;">%s</span></li>
+                            <li style="margin-bottom: 6px;"><strong style="color: #94a3b8;">Status:</strong> <span style="color: #38bdf8; font-weight: bold;">%s</span></li>
+                            %s
+                        </ul>
+                    </div>
+                    <p style="font-size: 14px; line-height: 1.6; color: #cbd5e1;">
+                        Theo reviews incoming signals carefully. If your situation requires direct intervention or a secure line, you will receive a direct access link to this email address.
+                    </p>
+                    <div style="font-size: 12px; color: #94a3b8; margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 16px; line-height: 1.5;">
                         Sent from KERNEL Central Relay &bull; Detroit, MI<br/>
-                        <em>"Fix what is broken. Honor the fracture."</em>
+                        <em style="color: #64748b;">"Fix what is broken. Honor the fracture."</em>
                     </div>
                 </div>
             </body>
@@ -114,21 +112,22 @@ public class GmailSmtpEmailService implements EmailService {
                 <html>
                 <head>
                     <meta charset="utf-8">
-                    <style>
-                        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #070a0f; color: #e2e8f0; padding: 20px; }
-                        .card { background: #0c1017; border: 1px solid #10b981; border-radius: 12px; padding: 24px; max-width: 600px; margin: 0 auto; }
-                        h2 { color: #34d399; margin-top: 0; }
-                        .summary { background: rgba(16,185,129,0.1); border-left: 3px solid #10b981; padding: 12px; margin: 16px 0; font-style: italic; }
-                    </style>
                 </head>
-                <body>
-                    <div class="card">
-                        <h2>🚨 KERNEL ALERT: New Citizen Transmission</h2>
-                        <p><strong>Citizen:</strong> %s (Age: %s)</p>
-                        <p><strong>Email:</strong> %s | <strong>Location:</strong> %s</p>
-                        <p><strong>Category:</strong> %s | <strong>Urgency:</strong> %s</p>
-                        <div class="summary">
-                            <strong>Summary:</strong> %s
+                <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #070a0f; color: #f8fafc; padding: 20px; margin: 0;">
+                    <div style="background-color: #0d131f; border: 1px solid #10b981; border-radius: 14px; padding: 26px; max-width: 600px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+                        <h2 style="color: #34d399; margin: 0 0 16px 0; font-size: 20px; font-weight: bold;">🚨 KERNEL ALERT: New Citizen Transmission</h2>
+                        <p style="color: #f8fafc; font-size: 14px; margin: 8px 0; line-height: 1.5;">
+                            <strong style="color: #94a3b8;">Citizen:</strong> <span style="color: #ffffff; font-weight: bold;">%s</span> (Age: <span style="color: #ffffff;">%s</span>)
+                        </p>
+                        <p style="color: #f8fafc; font-size: 14px; margin: 8px 0; line-height: 1.5;">
+                            <strong style="color: #94a3b8;">Email:</strong> <a href="mailto:%s" style="color: #38bdf8; text-decoration: underline;">%s</a> &nbsp;|&nbsp; <strong style="color: #94a3b8;">Location:</strong> <span style="color: #ffffff;">%s</span>
+                        </p>
+                        <p style="color: #f8fafc; font-size: 14px; margin: 8px 0; line-height: 1.5;">
+                            <strong style="color: #94a3b8;">Category:</strong> <span style="color: #34d399;">%s</span> &nbsp;|&nbsp; <strong style="color: #94a3b8;">Urgency:</strong> <span style="color: #f59e0b; font-weight: bold;">%s</span>
+                        </p>
+                        <div style="background-color: #161f30; border-left: 4px solid #10b981; border-radius: 6px; padding: 14px; margin: 18px 0; color: #f8fafc; font-size: 14px; line-height: 1.6;">
+                            <strong style="color: #34d399; display: block; margin-bottom: 4px;">Summary / Grievance:</strong>
+                            <span style="color: #f1f5f9;">%s</span>
                         </div>
                         %s
                     </div>
@@ -138,11 +137,12 @@ public class GmailSmtpEmailService implements EmailService {
                 recipientName,
                 grievance.getAge() != null ? grievance.getAge() : "N/A",
                 grievance.getEmail(),
+                grievance.getEmail(),
                 grievance.getLocation() != null ? grievance.getLocation() : "Unknown",
                 grievance.getCategory() != null ? grievance.getCategory() : "General",
                 grievance.getUrgency() != null ? grievance.getUrgency() : "LOW",
                 grievance.getAiSummary() != null ? grievance.getAiSummary() : grievance.getOriginalGrievance(),
-                hasVoiceNote ? "<p style='color:#38bdf8;'>🎙️ <strong>Citizen Voice Note: Attached to this email for playback.</strong></p>" : ""
+                hasVoiceNote ? "<div style='background-color: rgba(56,189,248,0.15); border: 1px solid #38bdf8; border-radius: 8px; padding: 12px; margin-top: 14px; color: #38bdf8; font-size: 13px;'>🎙️ <strong>Citizen Voice Note: Attached to this email for playback.</strong></div>" : ""
             );
 
             try {
@@ -176,30 +176,32 @@ public class GmailSmtpEmailService implements EmailService {
             <html>
             <head>
                 <meta charset="utf-8">
-                <style>
-                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070a0f; color: #e2e8f0; padding: 24px; }
-                    .card { background: #0c1017; border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 28px; max-width: 580px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-                    .badge { display: inline-block; background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 20px; margin-bottom: 16px; }
-                    h2 { color: #ffffff; margin-top: 0; }
-                    p { font-size: 14px; line-height: 1.6; color: #94a3b8; }
-                    .btn { display: inline-block; background: #10b981; color: #040806; font-weight: 600; text-decoration: none; padding: 12px 24px; border-radius: 8px; margin: 18px 0; font-size: 14px; letter-spacing: 0.05em; }
-                    .link-box { word-break: break-all; font-size: 12px; color: #38bdf8; background: rgba(56, 189, 248, 0.08); padding: 10px; border-radius: 6px; }
-                    .footer { font-size: 12px; color: #64748b; margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; }
-                </style>
             </head>
-            <body>
-                <div class="card">
-                    <div class="badge">SECURE 1-ON-1 COMMUNICATION CHANNEL</div>
-                    <h2>Hello %s,</h2>
-                    <p>Theo has opened a direct, private communication channel regarding your message.</p>
-                    <p>Click the button below to enter the secure room:</p>
-                    <a href="%s" class="btn">JOIN PRIVATE CHANNEL &rarr;</a>
-                    <p>Or paste this link into your browser:</p>
-                    <div class="link-box">%s</div>
-                    <p style="margin-top: 18px; font-size: 12px; color: #f59e0b;">
+            <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070a0f; color: #f8fafc; padding: 24px; margin: 0;">
+                <div style="background-color: #0d131f; border: 1px solid #10b981; border-radius: 14px; padding: 28px; max-width: 580px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <div style="display: inline-block; background-color: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #34d399; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; padding: 5px 12px; border-radius: 20px; margin-bottom: 18px;">
+                        SECURE 1-ON-1 COMMUNICATION CHANNEL
+                    </div>
+                    <h2 style="color: #ffffff; margin: 0 0 12px 0; font-size: 22px;">Hello %s,</h2>
+                    <p style="font-size: 14px; line-height: 1.6; color: #e2e8f0; margin-bottom: 16px;">
+                        Theo has opened a direct, private communication channel regarding your message.
+                    </p>
+                    <p style="font-size: 14px; color: #cbd5e1; margin-bottom: 18px;">
+                        Click the button below to enter the secure room:
+                    </p>
+                    <div style="text-align: center; margin: 24px 0;">
+                        <a href="%s" style="display: inline-block; background-color: #10b981; color: #040806; font-weight: bold; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-size: 14px; letter-spacing: 0.05em; box-shadow: 0 4px 15px rgba(16,185,129,0.3);">
+                            JOIN PRIVATE CHANNEL &rarr;
+                        </a>
+                    </div>
+                    <p style="font-size: 13px; color: #94a3b8; margin-bottom: 8px;">Or paste this link into your browser:</p>
+                    <div style="word-break: break-all; font-size: 12px; color: #38bdf8; background-color: #161f30; border: 1px solid rgba(56, 189, 248, 0.3); padding: 12px; border-radius: 8px;">
+                        %s
+                    </div>
+                    <p style="margin-top: 18px; font-size: 12px; color: #f59e0b; line-height: 1.5;">
                         &bull; This link is private to you and expires after the session concludes. Please do not forward it.
                     </p>
-                    <div class="footer">
+                    <div style="font-size: 12px; color: #94a3b8; margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 16px;">
                         KERNEL Secure Communications &bull; End-to-End Relay
                     </div>
                 </div>
