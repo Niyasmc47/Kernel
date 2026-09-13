@@ -123,6 +123,7 @@ export default function AmbientAudio({ isPlaying = true }: AmbientAudioProps) {
 
     try {
       localStorage.setItem('kernel_ambient_muted', String(newMuted));
+      window.dispatchEvent(new CustomEvent('kernel_audio_mute_changed', { detail: { muted: newMuted } }));
     } catch {
       // ignore
     }
@@ -155,12 +156,25 @@ export default function AmbientAudio({ isPlaying = true }: AmbientAudioProps) {
       }
     };
 
-    window.addEventListener('click', handleFirstGesture, { once: true });
-    window.addEventListener('keydown', handleFirstGesture, { once: true });
+    const handleExternalMuteChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ muted: boolean }>;
+      if (customEvent.detail !== undefined) {
+        setMuted(customEvent.detail.muted);
+      }
+    };
+
+    window.addEventListener('click', handleFirstGesture);
+    window.addEventListener('keydown', handleFirstGesture);
+    window.addEventListener('touchstart', handleFirstGesture);
+    window.addEventListener('pointerdown', handleFirstGesture);
+    window.addEventListener('kernel_audio_mute_changed', handleExternalMuteChange);
 
     return () => {
       window.removeEventListener('click', handleFirstGesture);
       window.removeEventListener('keydown', handleFirstGesture);
+      window.removeEventListener('touchstart', handleFirstGesture);
+      window.removeEventListener('pointerdown', handleFirstGesture);
+      window.removeEventListener('kernel_audio_mute_changed', handleExternalMuteChange);
     };
   }, [muted]);
 

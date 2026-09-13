@@ -78,7 +78,7 @@ export default function CinematicHero({ isIntroFinished = true }: CinematicHeroP
         <motion.div 
           animate={{ opacity: [0.25, 0.45, 0.25], scale: [0.97, 1.03, 0.97] }}
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-12 w-[340px] md:w-[440px] h-[520px] bg-emerald-500/20 rounded-full blur-[100px] -z-10"
+          className="absolute bottom-12 w-[280px] sm:w-[340px] md:w-[440px] h-[460px] md:h-[520px] bg-emerald-500/20 rounded-full blur-[90px] md:blur-[110px] -z-10"
         />
 
         {/* Character image with seamless edge blending & subtle idle breathing physics */}
@@ -93,7 +93,7 @@ export default function CinematicHero({ isIntroFinished = true }: CinematicHeroP
             alt="KERNEL Superhero Character" 
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            className="max-h-[72vh] md:max-h-[88vh] w-auto object-contain object-bottom drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)]"
+            className="max-h-[52vh] sm:max-h-[65vh] md:max-h-[88vh] w-auto object-contain object-bottom opacity-40 md:opacity-100 transition-opacity duration-500 drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)]"
           />
         </motion.div>
       </div>
@@ -104,13 +104,20 @@ export default function CinematicHero({ isIntroFinished = true }: CinematicHeroP
       <div className="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-8 flex flex-col md:flex-row items-end justify-between h-full pointer-events-none gap-6">
         
         {/* Left Side: Compact Editorial Headline (Clean, Does NOT cover KERNEL) */}
-        <div className="hidden md:flex flex-col mb-8 max-w-sm pointer-events-auto select-none z-30">
+        <div className="flex flex-col mb-4 md:mb-8 max-w-sm pointer-events-auto select-none z-30">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.2 }}
           >
-            <h1 className="font-cinematic text-4xl lg:text-5xl font-normal leading-[1.05] text-white tracking-tight mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+            <div className="inline-flex md:hidden items-center space-x-2 px-3 py-1 rounded-full bg-black/60 border border-emerald-500/30 backdrop-blur-md mb-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-mono text-[10px] text-emerald-400 tracking-wider uppercase font-semibold">
+                CENTRAL RELAY ONLINE
+              </span>
+            </div>
+
+            <h1 className="font-cinematic text-3xl sm:text-4xl lg:text-5xl font-normal leading-[1.08] text-white tracking-tight mb-2 md:mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
               EVERYTHING BREAKS.<br />
               <span className="italic font-light text-gray-200">That doesn't mean</span><br />
               <span className="text-emerald-400 font-medium drop-shadow-[0_0_20px_rgba(52,211,153,0.45)]">
@@ -118,16 +125,18 @@ export default function CinematicHero({ isIntroFinished = true }: CinematicHeroP
               </span>
             </h1>
 
-            <p className="font-sans text-gray-300 text-sm leading-relaxed mb-6 max-w-xs drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+            <p className="font-sans text-gray-300 text-xs sm:text-sm leading-relaxed mb-4 md:mb-6 max-w-xs drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
               Theo is listening. Tell him what happened.
             </p>
 
-            <PixelMagnet onClick={() => {
-              const el = document.getElementById('origin');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}>
-              Discover the Story
-            </PixelMagnet>
+            <div className="hidden md:block">
+              <PixelMagnet onClick={() => {
+                const el = document.getElementById('origin');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}>
+                Discover the Story
+              </PixelMagnet>
+            </div>
           </motion.div>
         </div>
 

@@ -105,16 +105,22 @@ export default function StoryChapter({
             direction={imagePosition === 'left' ? 'right' : 'left'}
             className="flex-1 w-full max-w-xl"
           >
-            <div className="relative rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)] group aspect-[16/10] bg-gray-100 dark:bg-black/40">
-              <motion.div
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                className="w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${imageUrl})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 pointer-events-none" />
-              <div className="absolute bottom-4 left-5 text-[11px] font-sans text-white/70 tracking-widest uppercase">
-                {subtitle}
+            <div className="relative group">
+              {/* Subtle ambient backlight aura */}
+              <div className="absolute -inset-2 rounded-3xl bg-emerald-500/10 dark:bg-emerald-400/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              
+              <div className="relative rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.6)] aspect-[16/10] bg-gray-100 dark:bg-black/40">
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  className="w-full h-full bg-cover bg-center"
+                  style={{ backgroundImage: `url(${imageUrl})` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 pointer-events-none" />
+                <div className="absolute bottom-4 left-5 text-[11px] font-mono text-white/80 tracking-widest uppercase flex items-center space-x-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span>{subtitle}</span>
+                </div>
               </div>
             </div>
           </AnimatedContent>

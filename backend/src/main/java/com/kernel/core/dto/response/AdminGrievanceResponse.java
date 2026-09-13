@@ -19,10 +19,16 @@ public class AdminGrievanceResponse {
     private String communicationStatus;
     private Instant communicationEnabledAt;
     private Instant communicationClosedAt;
+    private String voiceNoteBase64;
+    private String voiceNoteContentType;
 
     public AdminGrievanceResponse() {}
 
     public AdminGrievanceResponse(String id, String name, Integer age, String location, String email, String language, String category, String urgency, String originalGrievance, String aiSummary, String status, Instant createdAt, Instant updatedAt, String communicationStatus, Instant communicationEnabledAt, Instant communicationClosedAt) {
+        this(id, name, age, location, email, language, category, urgency, originalGrievance, aiSummary, status, createdAt, updatedAt, communicationStatus, communicationEnabledAt, communicationClosedAt, null, null);
+    }
+
+    public AdminGrievanceResponse(String id, String name, Integer age, String location, String email, String language, String category, String urgency, String originalGrievance, String aiSummary, String status, Instant createdAt, Instant updatedAt, String communicationStatus, Instant communicationEnabledAt, Instant communicationClosedAt, String voiceNoteBase64, String voiceNoteContentType) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -39,6 +45,8 @@ public class AdminGrievanceResponse {
         this.communicationStatus = communicationStatus;
         this.communicationEnabledAt = communicationEnabledAt;
         this.communicationClosedAt = communicationClosedAt;
+        this.voiceNoteBase64 = voiceNoteBase64;
+        this.voiceNoteContentType = voiceNoteContentType;
     }
 
     public String getId() { return id; }
@@ -73,4 +81,8 @@ public class AdminGrievanceResponse {
     public void setCommunicationEnabledAt(Instant communicationEnabledAt) { this.communicationEnabledAt = communicationEnabledAt; }
     public Instant getCommunicationClosedAt() { return communicationClosedAt; }
     public void setCommunicationClosedAt(Instant communicationClosedAt) { this.communicationClosedAt = communicationClosedAt; }
+    public String getVoiceNoteBase64() { return voiceNoteBase64; }
+    public void setVoiceNoteBase64(String voiceNoteBase64) { this.voiceNoteBase64 = voiceNoteBase64; }
+    public String getVoiceNoteContentType() { return voiceNoteContentType; }
+    public void setVoiceNoteContentType(String voiceNoteContentType) { this.voiceNoteContentType = voiceNoteContentType; }
 }

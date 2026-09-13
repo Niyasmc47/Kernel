@@ -180,11 +180,11 @@ export default function AbilitiesSection() {
             </span>
           </div>
 
-          <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight leading-[1.15]">
-            Theo’s Powers &amp; <span className="text-emerald-600 dark:text-emerald-400">Abilities</span>
+          <h2 className="font-cinematic text-4xl sm:text-5xl lg:text-6xl font-normal text-gray-900 dark:text-white mb-4 tracking-tight leading-[1.08]">
+            THEO'S POWERS &amp; <span className="italic text-emerald-600 dark:text-emerald-400">ABILITIES.</span>
           </h2>
 
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+          <p className="font-sans text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
             Theo didn't ask for these abilities, but he uses them to protect people and repair what was broken. Click any power below to watch its simulation and see how it works in real-world scenarios.
           </p>
 
@@ -243,7 +243,7 @@ export default function AbilitiesSection() {
         </div>
 
         {/* Right Column: High-Quality Video Showcase & Clear Real-World Explanation */}
-        <div className="flex-1 w-full lg:max-w-xl sticky top-24">
+        <div className="flex-1 w-full lg:max-w-xl relative lg:sticky lg:top-24">
           <SpotlightCard 
             spotlightColor={`${activeAbility.accent}20`}
             className="p-6 sm:p-8 border-gray-200/90 dark:border-white/10 bg-white/95 dark:bg-black/50 shadow-2xl backdrop-blur-xl rounded-3xl"

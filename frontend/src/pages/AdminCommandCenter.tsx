@@ -112,15 +112,62 @@ export default function AdminCommandCenter() {
     );
   }
 
+  const [filterStatus, setFilterStatus] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const formatDate = (isoStr?: string) => {
+    if (!isoStr) return 'Just now';
+    try {
+      const d = new Date(isoStr);
+      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' • ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return isoStr;
+    }
+  };
+
+  const filteredGrievances = (grievances || []).filter((g: any) => {
+    if (filterStatus !== 'ALL' && g.status !== filterStatus) {
+      return false;
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const matchName = g.name?.toLowerCase().includes(q);
+      const matchEmail = g.email?.toLowerCase().includes(q);
+      const matchLoc = g.location?.toLowerCase().includes(q);
+      const matchMsg = (g.originalGrievance || g.aiSummary || '').toLowerCase().includes(q);
+      const matchCat = g.category?.toLowerCase().includes(q);
+      return matchName || matchEmail || matchLoc || matchMsg || matchCat;
+    }
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-[#070a0f] text-gray-200 p-6 md:p-10 font-sans">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-8 border-b border-white/10 pb-5">
-          <div>
-            <div className="font-pixel text-[9px] text-emerald-400 tracking-[0.2em] mb-1">SEC-CLEARANCE // LEVEL 5</div>
-            <h1 className="text-3xl font-cinematic text-white font-normal">COMMAND CENTER</h1>
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-6 border-b border-white/10 pb-5">
+          <div className="flex items-center space-x-4">
+            <div className="relative w-12 h-12 flex-shrink-0">
+              <div className="absolute inset-0 rounded-xl bg-emerald-500/20 blur-sm"></div>
+              <img 
+                src="/kernel-logo.jpg" 
+                alt="Kernel Sigil" 
+                className="w-full h-full object-cover rounded-xl border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+              />
+            </div>
+            <div>
+              <div className="flex items-center space-x-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <div className="font-pixel text-[9px] text-emerald-400 tracking-[0.2em]">
+                  SEC-CLEARANCE // LEVEL 5 • FULL LATTICE HISTORY
+                </div>
+              </div>
+              <h1 className="text-3xl font-cinematic text-white font-normal">COMMAND CENTER</h1>
+            </div>
           </div>
           <div className="flex items-center space-x-3">
+            <div className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-300">
+              SIGNALS LOGGED: <span className="text-emerald-400 font-bold ml-1">{grievances?.length || 0}</span>
+            </div>
             <Button 
               variant="outline"
               size="sm"
@@ -144,11 +191,50 @@ export default function AdminCommandCenter() {
           </div>
         </div>
 
+        {/* Filters & Search Bar */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
+          {/* Status Filter Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/10">
+            {['ALL', 'NEW', 'REVIEWING', 'RESOLVED', 'CLOSED'].map((st) => (
+              <button
+                key={st}
+                onClick={() => setFilterStatus(st)}
+                className={`px-3 py-1 rounded-lg text-xs font-mono tracking-wider transition-all cursor-pointer ${
+                  filterStatus === st
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-semibold'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Box */}
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search history by name, location, or issue..."
+              className="w-full sm:w-72 bg-white/5 border border-white/10 rounded-xl px-3.5 py-1.5 text-xs text-white placeholder-gray-500 outline-none focus:border-emerald-400/60 transition-all font-sans"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-white"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+
         <div className="overflow-x-auto rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
               <tr className="border-b border-white/10 text-gray-400 font-sans text-xs uppercase tracking-wider">
-                <th className="p-4">ID</th>
+                <th className="p-4">Logged</th>
                 <th className="p-4">Citizen</th>
                 <th className="p-4">Location</th>
                 <th className="p-4">Message / AI Summary</th>
@@ -160,9 +246,11 @@ export default function AdminCommandCenter() {
               </tr>
             </thead>
             <tbody>
-              {grievances?.map((g: any) => (
+              {filteredGrievances?.map((g: any) => (
                 <tr key={g.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                  <td className="p-4 font-mono text-xs text-gray-400">{g.id ? g.id.substring(0,8) : '...'}</td>
+                  <td className="p-4 font-mono text-xs text-gray-400 whitespace-nowrap">
+                    {formatDate(g.createdAt)}
+                  </td>
                   <td className="p-4">
                     <div className="font-medium text-white">{g.name}</div>
                     <div className="text-xs text-gray-400 font-mono">{g.email}</div>
@@ -173,11 +261,29 @@ export default function AdminCommandCenter() {
                     <div className="text-xs text-gray-200 line-clamp-2" title={g.originalGrievance || g.aiSummary}>
                       {g.aiSummary || g.originalGrievance || 'No summary available'}
                     </div>
+                    {g.voiceNoteBase64 && (
+                      <div className="mt-2 flex flex-col space-y-1">
+                        <span className="text-[10px] font-mono text-emerald-400 flex items-center space-x-1">
+                          <span>🎙️ VOICE TRANSMISSION:</span>
+                        </span>
+                        <audio 
+                          controls 
+                          src={g.voiceNoteBase64.startsWith('data:') ? g.voiceNoteBase64 : `data:${g.voiceNoteContentType || 'audio/webm'};base64,${g.voiceNoteBase64}`} 
+                          className="h-7 w-48 rounded opacity-90 hover:opacity-100 transition-opacity" 
+                        />
+                      </div>
+                    )}
                   </td>
                   <td className="p-4 text-emerald-400/90 text-xs font-mono">{g.category}</td>
                   <td className={`p-4 font-semibold text-xs ${g.urgency === 'CRITICAL' ? 'text-red-400 animate-pulse' : g.urgency === 'HIGH' ? 'text-orange-400' : 'text-gray-300'}`}>{g.urgency}</td>
                   <td className="p-4">
-                    <span className="px-2 py-0.5 rounded text-xs border border-white/10 bg-white/5 font-mono">
+                    <span className={`px-2 py-0.5 rounded text-xs border font-mono ${
+                      g.status === 'NEW' 
+                        ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300'
+                        : g.status === 'RESOLVED'
+                        ? 'border-blue-500/40 bg-blue-500/15 text-blue-300'
+                        : 'border-white/10 bg-white/5 text-gray-400'
+                    }`}>
                       {g.status}
                     </span>
                   </td>
@@ -195,10 +301,10 @@ export default function AdminCommandCenter() {
                   </td>
                 </tr>
               ))}
-              {(!grievances || grievances.length === 0) && (
+              {(!filteredGrievances || filteredGrievances.length === 0) && (
                 <tr>
                   <td colSpan={9} className="p-8 text-center text-gray-500 font-sans text-sm">
-                    No active grievances recorded in the Lattice.
+                    No matching grievances found in the Lattice history.
                   </td>
                 </tr>
               )}

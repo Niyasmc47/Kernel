@@ -22,8 +22,8 @@ export default function MissionSection({ onReturnToHero }: MissionSectionProps) 
           style={{ backgroundImage: `url('/assets/mission_bg.jpg')` }}
         />
         {/* Soft morning ambient gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#f8faf7] via-[#f8faf7]/40 to-[#f8faf7]/80 dark:from-[#070a0f] dark:via-[#070a0f]/40 dark:to-[#070a0f]/80 transition-colors duration-500" />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#f8faf7]/50 to-[#f8faf7] dark:via-[#070a0f]/50 dark:to-[#070a0f]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#f8faf7] via-[#f8faf7]/30 to-[#f8faf7]/70 dark:from-[#070a0f] dark:via-[#070a0f]/30 dark:to-[#070a0f]/70 transition-colors duration-500" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent,rgba(248,250,247,0.85))] dark:bg-[radial-gradient(ellipse_at_center,transparent,rgba(7,10,15,0.9))] transition-colors duration-500" />
       </div>
 
       <div className="relative z-10 w-full max-w-4xl mx-auto px-6 sm:px-8 flex flex-col items-center">

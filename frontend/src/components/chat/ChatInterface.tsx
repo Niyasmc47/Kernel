@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Mic, Square, Trash2, Play, Pause, Volume2 } from 'lucide-react';
 import { startConversation, sendMessage, submitGrievance } from '../../api';
 import { getStoredLanguage, type Language } from '../../utils/language';
+import { playKeyClickSound, playEnterSound, playTheoBlipSound } from '../../utils/audioEffects';
 
 interface Message {
   id: string;
@@ -594,12 +596,113 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
 
+  // Audio voice note recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioBase64, setAudioBase64] = useState<string | null>(null);
+  const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingTimerRef = useRef<any>(null);
+  const audioPreviewRef = useRef<HTMLAudioElement | null>(null);
+
   // Guards to prevent duplicate sequence runs
   const initStartedRef = useRef(false);
   const activeRunIdRef = useRef(0);
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const mimeType = mediaRecorder.mimeType || 'audio/webm';
+        const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+        const url = URL.createObjectURL(audioBlob);
+        setAudioUrl(url);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64data = reader.result as string;
+          setAudioBase64(base64data);
+        };
+        reader.readAsDataURL(audioBlob);
+
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start(200);
+      setIsRecording(true);
+      setRecordingSeconds(0);
+
+      recordingTimerRef.current = setInterval(() => {
+        setRecordingSeconds((prev) => {
+          if (prev >= 120) {
+            stopRecording();
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    } catch (err) {
+      console.error('Microphone access error:', err);
+      alert('Could not access microphone. Please ensure microphone permissions are enabled in your browser.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (recordingTimerRef.current) {
+      clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+  };
+
+  const discardRecording = () => {
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+    }
+    setAudioUrl(null);
+    setAudioBase64(null);
+    setRecordingSeconds(0);
+    setIsPlayingPreview(false);
+  };
+
+  const togglePlayPreview = () => {
+    if (!audioPreviewRef.current || !audioUrl) return;
+    if (isPlayingPreview) {
+      audioPreviewRef.current.pause();
+      setIsPlayingPreview(false);
+    } else {
+      audioPreviewRef.current.play();
+      setIsPlayingPreview(true);
+    }
+  };
+
+  const formatRecordingTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
   const appendMsg = (sender: 'ai' | 'user', text: string, isSummary = false) => {
     setMessages(prev => [...prev, { id: Date.now().toString() + Math.random(), sender, text, isSummary }]);
+    if (sender === 'ai') {
+      playTheoBlipSound(0.06);
+    }
   };
 
   const simulateKernelTyping = async (lines: string[], delayMs = 1200) => {
@@ -760,8 +863,23 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
         startMutation.mutate(lang); 
       }
     } else if (phase === 'GRIEVANCE') {
-       if (sessionId) {
-         sendMutation.mutate({ sid: sessionId, msg: userMsg });
+       if (audioBase64 || audioUrl) {
+          // Voice note flow: Directly verify if it's the core issue and serious enough to send to mail
+          setIsTyping(true);
+          setTimeout(() => {
+            appendMsg('ai', "Voice transmission received and encrypted.");
+          }, 600);
+          setTimeout(() => {
+            appendMsg('ai', "Please confirm: Is this the main issue you're facing, and is it serious enough to transmit directly to Theo's secure mail?");
+            setIsTyping(false);
+            setPhase('CONFIRMATION');
+            setAnalysisResult({
+              summary: `🎙️ Voice Note Recording (${formatRecordingTime(recordingSeconds)}) attached for Theo's direct review.`
+            });
+          }, 1500);
+       } else if (sessionId) {
+          // Normal text flow: Continue standard AI dialogue
+          sendMutation.mutate({ sid: sessionId, msg: userMsg });
        }
     }
   };
@@ -769,7 +887,10 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      playEnterSound(0.12);
       handleSend();
+    } else if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete' || e.key === ' ') {
+      playKeyClickSound(0.08);
     }
   };
 
@@ -790,7 +911,9 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
           grievanceText = userMessages.join(' - ');
        }
        if (grievanceText.length < 10) {
-          grievanceText = 'Assistance requested by citizen through communication portal.';
+          grievanceText = audioBase64 
+            ? `🎙️ Voice Note Recording (${formatRecordingTime(recordingSeconds)}) submitted by citizen for Theo's direct review.`
+            : 'Assistance requested by citizen through communication portal.';
        }
 
        const parsedAge = parseInt(userData.age, 10);
@@ -803,12 +926,15 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
           email: userData.email?.trim() || '',
           language: lang || userData.language || 'en',
           grievance: grievanceText,
+          voiceNoteBase64: audioBase64 || undefined,
+          voiceNoteContentType: audioBase64 ? 'audio/webm' : undefined,
           sessionId: sessionId || ('session-' + Date.now())
        };
 
        submitMutation.mutate(payload);
     } else {
        appendMsg('user', locale.editBtn);
+       discardRecording();
        setPhase('GRIEVANCE');
        simulateKernelTyping([locale.editAck], 1100);
     }
@@ -829,17 +955,26 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
   const isInputDisabled = isTyping || idStep === 'INIT' || phase === 'SUBMITTED' || phase === 'CONFIRMATION';
 
   return (
-    <div className="relative flex flex-col h-[58vh] min-h-[440px] max-h-[580px] w-full max-w-xl mx-auto md:ml-auto overflow-hidden bg-white/90 dark:bg-black/45 backdrop-blur-2xl rounded-2xl border border-gray-200/80 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-10 pointer-events-auto transition-colors duration-300">
+    <div className="relative flex flex-col h-[54vh] sm:h-[58vh] min-h-[420px] max-h-[580px] w-full max-w-xl mx-auto md:ml-auto overflow-hidden bg-white/90 dark:bg-black/45 backdrop-blur-2xl rounded-2xl border border-gray-200/80 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-10 pointer-events-auto transition-colors duration-300">
       
       {/* Header bar */}
-      <div className="px-6 py-3 border-b border-gray-200/80 dark:border-white/5 flex items-center justify-between text-xs">
-        <div className="flex items-center space-x-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
-          <span className="font-sans font-semibold text-[11px] tracking-wider text-emerald-700 dark:text-emerald-400">
-            {locale.channelTitle}
-          </span>
+      <div className="px-5 py-3 border-b border-gray-200/80 dark:border-white/5 flex items-center justify-between text-xs">
+        <div className="flex items-center space-x-2.5">
+          <div className="relative w-6 h-6 flex items-center justify-center">
+            <img 
+              src="/kernel-logo.jpg" 
+              alt="Kernel Hero Sigil" 
+              className="w-full h-full object-cover rounded-md border border-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-sans font-semibold text-[11px] tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+              {locale.channelTitle}
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            </span>
+          </div>
         </div>
-        <span className="font-mono text-[10px] text-gray-500 uppercase px-2 py-0.5 rounded bg-gray-100 dark:bg-white/5">
+        <span className="font-mono text-[10px] text-gray-500 uppercase px-2 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200/60 dark:border-white/5">
           {lang}
         </span>
       </div>
@@ -898,6 +1033,47 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
 
       {/* Interactive Controls & Input */}
       <div className="p-4 border-t border-gray-200/80 dark:border-white/5 bg-gray-50/80 dark:bg-black/25 relative z-20">
+        
+        {/* Hidden Audio Player for Previewing Voice Recording */}
+        {audioUrl && (
+          <audio 
+            ref={audioPreviewRef} 
+            src={audioUrl} 
+            onEnded={() => setIsPlayingPreview(false)} 
+            className="hidden" 
+          />
+        )}
+
+        {/* Attached Voice Note Banner (When recording is complete and ready to send) */}
+        {audioUrl && !isRecording && (
+          <div className="mb-3 px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300 animate-in fade-in duration-200">
+            <div className="flex items-center space-x-2">
+              <Volume2 className="w-4 h-4 text-emerald-500 animate-pulse" />
+              <span className="font-mono text-[11px] font-semibold">
+                VOICE NOTE READY ({formatRecordingTime(recordingSeconds)})
+              </span>
+            </div>
+            <div className="flex items-center space-x-1.5">
+              <button
+                type="button"
+                onClick={togglePlayPreview}
+                className="p-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-700 dark:text-emerald-300 transition-colors"
+                title={isPlayingPreview ? "Pause" : "Play Preview"}
+              >
+                {isPlayingPreview ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                type="button"
+                onClick={discardRecording}
+                className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-500 hover:text-red-400 transition-colors"
+                title="Discard voice note"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {phase === 'CONFIRMATION' ? (
           <div className="flex flex-col space-y-2.5">
             <div className="text-xs font-medium text-gray-700 dark:text-gray-400 text-center font-sans">
@@ -933,6 +1109,34 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
               {locale.confirmedSubtitle}
             </p>
           </div>
+        ) : isRecording ? (
+          /* Live Recording Controls */
+          <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-red-950/30 border border-red-500/40 animate-pulse">
+            <div className="flex items-center space-x-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+              <span className="font-mono text-xs text-red-400 font-semibold">
+                RECORDING VOICE NOTE ({formatRecordingTime(recordingSeconds)})
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                onClick={stopRecording}
+                className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-sans text-xs font-medium flex items-center space-x-1.5 shadow-md cursor-pointer transition-all"
+              >
+                <Square className="w-3.5 h-3.5 fill-current" />
+                <span>Stop &amp; Attach</span>
+              </button>
+              <button
+                type="button"
+                onClick={discardRecording}
+                className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                title="Cancel Recording"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         ) : (
           <div className="flex items-center space-x-2">
             {phase === 'GRIEVANCE' ? (
@@ -940,9 +1144,12 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
                 ref={inputRef as any}
                 rows={1}
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  playKeyClickSound(0.08);
+                }}
                 onKeyDown={handleKeyDown}
-                placeholder={placeholder}
+                placeholder={audioUrl ? "Voice note attached! (Add text or press Send)" : placeholder}
                 disabled={isInputDisabled}
                 className="flex-1 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none resize-none transition-all disabled:opacity-50"
               />
@@ -951,16 +1158,44 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
                 ref={inputRef as any}
                 type={inputType}
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  playKeyClickSound(0.08);
+                }}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
                 disabled={isInputDisabled}
                 className="flex-1 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none transition-all disabled:opacity-50"
               />
             )}
+
+            {/* Microphone Button for Grievance Phase */}
+            {phase === 'GRIEVANCE' && (
+              <button
+                type="button"
+                onClick={startRecording}
+                disabled={isInputDisabled}
+                title="Record Voice Note"
+                className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-center ${
+                  audioUrl
+                    ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+                    : 'border-gray-300 dark:border-white/10 hover:border-emerald-500/60 text-gray-600 dark:text-gray-300 hover:text-emerald-400 hover:bg-white/5'
+                }`}
+              >
+                <Mic className="w-4 h-4" />
+              </button>
+            )}
+
             <button
-              onClick={handleSend}
-              disabled={isInputDisabled || !inputValue.trim()}
+              onClick={() => {
+                if (!inputValue.trim() && audioUrl) {
+                  setInputValue("🎙️ [Voice note attached for Theo]");
+                  setTimeout(() => handleSend(), 50);
+                } else {
+                  handleSend();
+                }
+              }}
+              disabled={isInputDisabled || (!inputValue.trim() && !audioUrl)}
               className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-sans font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_2px_10px_rgba(16,185,129,0.25)] flex items-center justify-center cursor-pointer"
             >
               {locale.sendBtn}

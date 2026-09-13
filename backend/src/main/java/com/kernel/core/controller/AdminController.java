@@ -109,7 +109,9 @@ public class AdminController {
                 g.getUpdatedAt(),
                 g.getCommunicationStatus() != null ? g.getCommunicationStatus().name() : null,
                 g.getCommunicationEnabledAt(),
-                g.getCommunicationClosedAt()
+                g.getCommunicationClosedAt(),
+                g.getVoiceNoteBase64(),
+                g.getVoiceNoteContentType()
         );
     }
 }

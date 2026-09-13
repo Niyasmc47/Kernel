@@ -51,6 +51,10 @@ public class Grievance {
     private Instant communicationEnabledAt;
     private Instant communicationClosedAt;
 
+    // Optional voice note audio recording (Base64)
+    private String voiceNoteBase64;
+    private String voiceNoteContentType;
+
     public Grievance() {
     }
 
@@ -188,5 +192,21 @@ public class Grievance {
 
     public void setCommunicationClosedAt(Instant communicationClosedAt) {
         this.communicationClosedAt = communicationClosedAt;
+    }
+
+    public String getVoiceNoteBase64() {
+        return voiceNoteBase64;
+    }
+
+    public void setVoiceNoteBase64(String voiceNoteBase64) {
+        this.voiceNoteBase64 = voiceNoteBase64;
+    }
+
+    public String getVoiceNoteContentType() {
+        return voiceNoteContentType;
+    }
+
+    public void setVoiceNoteContentType(String voiceNoteContentType) {
+        this.voiceNoteContentType = voiceNoteContentType;
     }
 }

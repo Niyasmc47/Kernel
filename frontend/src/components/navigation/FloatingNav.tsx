@@ -169,12 +169,22 @@ export default function FloatingNav({ onNavigate }: FloatingNavProps) {
       {/* Brand / Logo */}
       <button 
         onClick={() => onNavigate && onNavigate('top')}
-        className="flex items-center space-x-2.5 cursor-pointer text-left group"
+        className="flex items-center space-x-3 cursor-pointer text-left group"
       >
-        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_#10b981] group-hover:scale-125 transition-transform" />
-        <span className="font-pixel text-emerald-700 dark:text-emerald-400 tracking-[0.2em] text-xs font-bold">
-          KERNEL
-        </span>
+        <div className="relative w-8 h-8 flex items-center justify-center">
+          <div className="absolute inset-0 rounded-lg bg-emerald-500/25 blur-sm group-hover:blur-md transition-all"></div>
+          <img 
+            src="/kernel-logo.jpg" 
+            alt="Kernel Superhero Sigil" 
+            className="w-full h-full object-cover rounded-md border border-emerald-500/60 shadow-[0_0_10px_rgba(16,185,129,0.5)] group-hover:scale-110 group-hover:border-emerald-400 group-hover:shadow-[0_0_15px_rgba(52,211,153,0.8)] transition-all duration-300"
+          />
+        </div>
+        <div className="flex items-center">
+          <span className="font-pixel text-emerald-700 dark:text-emerald-400 tracking-[0.2em] text-xs font-bold flex items-center gap-1.5">
+            KERNEL
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          </span>
+        </div>
       </button>
 
       {/* Center Links with clean intuitive human-friendly wording */}

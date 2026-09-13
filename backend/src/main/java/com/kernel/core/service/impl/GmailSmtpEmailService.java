@@ -6,10 +6,13 @@ import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 
 @Service
 @Primary
@@ -44,6 +47,12 @@ public class GmailSmtpEmailService implements EmailService {
         }
 
         String recipientName = grievance.getName() != null ? grievance.getName() : "Citizen";
+        boolean hasVoiceNote = grievance.getVoiceNoteBase64() != null && !grievance.getVoiceNoteBase64().isBlank();
+
+        String voiceNoteStatusHtml = hasVoiceNote 
+            ? "<li><strong>Voice Recording:</strong> Attached (Playable audio file)</li>" 
+            : "";
+
         String htmlContent = String.format("""
             <!DOCTYPE html>
             <html>
@@ -70,6 +79,7 @@ public class GmailSmtpEmailService implements EmailService {
                         <li><strong>Location:</strong> %s</li>
                         <li><strong>Category:</strong> %s</li>
                         <li><strong>Status:</strong> %s</li>
+                        %s
                     </div>
                     <p>Theo reviews incoming signals carefully. If your situation requires direct intervention or a secure line, you will receive another link directly to this email address.</p>
                     <div class="footer">
@@ -84,10 +94,69 @@ public class GmailSmtpEmailService implements EmailService {
             grievance.getEmail(),
             grievance.getLocation() != null ? grievance.getLocation() : "Unknown",
             grievance.getCategory() != null ? grievance.getCategory() : "General",
-            grievance.getStatus()
+            grievance.getStatus(),
+            voiceNoteStatusHtml
         );
 
-        sendHtmlEmail(grievance.getEmail(), "KERNEL - Message Received from " + recipientName, htmlContent);
+        // 1. Send confirmation to citizen (with voice attachment if present)
+        sendHtmlEmailWithVoiceNote(
+            grievance.getEmail(), 
+            "KERNEL - Message Received from " + recipientName, 
+            htmlContent, 
+            grievance.getVoiceNoteBase64(), 
+            grievance.getVoiceNoteContentType()
+        );
+
+        // 2. If voice note or urgent grievance, notify superhero mailbox with direct attachment
+        if (fromEmail != null && !fromEmail.equalsIgnoreCase(grievance.getEmail())) {
+            String adminNotificationHtml = String.format("""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #070a0f; color: #e2e8f0; padding: 20px; }
+                        .card { background: #0c1017; border: 1px solid #10b981; border-radius: 12px; padding: 24px; max-width: 600px; margin: 0 auto; }
+                        h2 { color: #34d399; margin-top: 0; }
+                        .summary { background: rgba(16,185,129,0.1); border-left: 3px solid #10b981; padding: 12px; margin: 16px 0; font-style: italic; }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <h2>🚨 KERNEL ALERT: New Citizen Transmission</h2>
+                        <p><strong>Citizen:</strong> %s (Age: %s)</p>
+                        <p><strong>Email:</strong> %s | <strong>Location:</strong> %s</p>
+                        <p><strong>Category:</strong> %s | <strong>Urgency:</strong> %s</p>
+                        <div class="summary">
+                            <strong>Summary:</strong> %s
+                        </div>
+                        %s
+                    </div>
+                </body>
+                </html>
+                """,
+                recipientName,
+                grievance.getAge() != null ? grievance.getAge() : "N/A",
+                grievance.getEmail(),
+                grievance.getLocation() != null ? grievance.getLocation() : "Unknown",
+                grievance.getCategory() != null ? grievance.getCategory() : "General",
+                grievance.getUrgency() != null ? grievance.getUrgency() : "LOW",
+                grievance.getAiSummary() != null ? grievance.getAiSummary() : grievance.getOriginalGrievance(),
+                hasVoiceNote ? "<p style='color:#38bdf8;'>🎙️ <strong>Citizen Voice Note: Attached to this email for playback.</strong></p>" : ""
+            );
+
+            try {
+                sendHtmlEmailWithVoiceNote(
+                    fromEmail,
+                    "🚨 [KERNEL ALERT] New " + (hasVoiceNote ? "Voice Transmission" : "Grievance") + " from " + recipientName,
+                    adminNotificationHtml,
+                    grievance.getVoiceNoteBase64(),
+                    grievance.getVoiceNoteContentType()
+                );
+            } catch (Exception e) {
+                log.warn("Failed to dispatch admin superhero email alert: {}", e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -142,18 +211,36 @@ public class GmailSmtpEmailService implements EmailService {
             visitorLink
         );
 
-        sendHtmlEmail(grievance.getEmail(), "KERNEL - Secure 1-on-1 Communication Link for " + recipientName, htmlContent);
+        sendHtmlEmailWithVoiceNote(grievance.getEmail(), "KERNEL - Secure 1-on-1 Communication Link for " + recipientName, htmlContent, null, null);
     }
 
-    private void sendHtmlEmail(String to, String subject, String htmlBody) {
+    private void sendHtmlEmailWithVoiceNote(String to, String subject, String htmlBody, String voiceNoteBase64, String contentType) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom(fromEmail, "KERNEL Support");
+            helper.setFrom(fromEmail, "KERNEL Central Relay");
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlBody, true);
+
+            // If voice note audio exists, decode and attach
+            if (voiceNoteBase64 != null && !voiceNoteBase64.isBlank()) {
+                try {
+                    String cleanBase64 = voiceNoteBase64;
+                    if (cleanBase64.contains(",")) {
+                        cleanBase64 = cleanBase64.substring(cleanBase64.indexOf(",") + 1);
+                    }
+                    byte[] audioBytes = Base64.getDecoder().decode(cleanBase64);
+                    String mimeType = contentType != null && !contentType.isBlank() ? contentType : "audio/webm";
+                    String filename = mimeType.contains("wav") ? "citizen_voice_transmission.wav" : "citizen_voice_transmission.webm";
+                    
+                    helper.addAttachment(filename, new ByteArrayResource(audioBytes), mimeType);
+                    log.info("Attached voice recording ({} bytes, mime: {}) to email to: {}", audioBytes.length, mimeType, to);
+                } catch (Exception attachErr) {
+                    log.error("Failed to attach voice note audio to email: {}", attachErr.getMessage());
+                }
+            }
 
             mailSender.send(message);
             log.info("Successfully sent email via Google SMTP ({}) to: {}", fromEmail, to);

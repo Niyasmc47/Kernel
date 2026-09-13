@@ -28,6 +28,12 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
     const newMuted = !video.muted;
     video.muted = newMuted;
     setIsMuted(newMuted);
+    try {
+      localStorage.setItem('kernel_ambient_muted', String(newMuted));
+      window.dispatchEvent(new CustomEvent('kernel_audio_mute_changed', { detail: { muted: newMuted } }));
+    } catch {
+      // ignore
+    }
     if (!newMuted) {
       video.play().catch(() => {});
     }

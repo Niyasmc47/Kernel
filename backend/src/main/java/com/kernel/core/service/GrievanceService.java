@@ -13,6 +13,7 @@ import com.kernel.core.repository.GrievanceRepository;
 import com.kernel.core.exception.ResourceNotFoundException;
 import com.kernel.core.service.session.CommunicationSession;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -45,6 +47,109 @@ public class GrievanceService {
         this.communicationSessionService = communicationSessionService;
     }
 
+    @PostConstruct
+    public void initHistoricalRecords() {
+        if (!inMemoryStore.isEmpty()) return;
+
+        // Seed rich historical chronicle records
+        createHistoricalCase(
+            "grv-hist-001",
+            "Marcus Vance",
+            34,
+            "East Detroit, MI",
+            "m.vance@detroitworks.net",
+            "en",
+            Category.EMERGENCY,
+            Urgency.HIGH,
+            "Structural vibration stress on apartment block foundation after heavy transit line failure. Cracks expanding rapidly across basement support beams.",
+            "Load-bearing fracture along East Detroit transit corridor; Theo deployed atomic resonance reforge to stabilize structural support columns.",
+            GrievanceStatus.RESOLVED,
+            Instant.now().minus(1, ChronoUnit.DAYS).minus(4, ChronoUnit.HOURS)
+        );
+
+        createHistoricalCase(
+            "grv-hist-002",
+            "Elena Rostova",
+            28,
+            "Chicago, IL",
+            "e.rostova@research-lab.org",
+            "en",
+            Category.TECHNICAL,
+            Urgency.CRITICAL,
+            "Containment chamber overload in particle harmonics division. Magnetic deflection shield collapsed during high-voltage resonance test.",
+            "Laboratory core power surge with intense electromagnetic discharge; Theo contained kinetic blast wave and prevented perimeter fallout.",
+            GrievanceStatus.RESOLVED,
+            Instant.now().minus(3, ChronoUnit.DAYS).minus(7, ChronoUnit.HOURS)
+        );
+
+        createHistoricalCase(
+            "grv-hist-003",
+            "Darius Cole",
+            46,
+            "Detroit, MI",
+            "darius.cole@communityclinic.org",
+            "en",
+            Category.COMMUNITY,
+            Urgency.MEDIUM,
+            "Targeted power line cut at local neighborhood health center. Critical refrigeration units and life support backup circuits went dark.",
+            "Deliberate power grid sabotage targeting neighborhood medical clinic; emergency power circuits reforged and restored in-memory.",
+            GrievanceStatus.RESOLVED,
+            Instant.now().minus(6, ChronoUnit.DAYS).minus(2, ChronoUnit.HOURS)
+        );
+
+        createHistoricalCase(
+            "grv-hist-004",
+            "Amina Sayed",
+            22,
+            "Cleveland, OH",
+            "amina.sayed@univ-cleveland.edu",
+            "en",
+            Category.GENERAL,
+            Urgency.LOW,
+            "Corrupted electronic surveillance loop tracking student residences without authorization. Cameras refusing manual shutdown commands.",
+            "Unauthorized automated optical tracking anomaly; signal bleed pulse discharged to scramble corrupted surveillance optics.",
+            GrievanceStatus.REVIEWING,
+            Instant.now().minus(10, ChronoUnit.DAYS)
+        );
+
+        createHistoricalCase(
+            "grv-hist-005",
+            "Citizen K",
+            29,
+            "East Detroit Workshop",
+            "contact@lattice-relay.io",
+            "en",
+            Category.OTHER,
+            Urgency.CRITICAL,
+            "Unidentified red electromagnetic static bleed along sector 4 communication lines. Data packets being systematically consumed into a void.",
+            "Root Access corruption cluster spreading along subterranean data cables; isolated and firewall containment active.",
+            GrievanceStatus.NEW,
+            Instant.now().minus(14, ChronoUnit.DAYS)
+        );
+
+        log.info("Initialized {} historical chronicle grievances in memory.", inMemoryStore.size());
+    }
+
+    private void createHistoricalCase(String id, String name, int age, String location, String email, String lang, Category category, Urgency urgency, String grievanceText, String summary, GrievanceStatus status, Instant createdAt) {
+        Grievance g = new Grievance();
+        g.setId(id);
+        g.setName(name);
+        g.setAge(age);
+        g.setLocation(location);
+        g.setEmail(email);
+        g.setLanguage(lang);
+        g.setCategory(category);
+        g.setUrgency(urgency);
+        g.setOriginalGrievance(grievanceText);
+        g.setAiSummary(summary);
+        g.setStatus(status);
+        g.setCommunicationStatus(CommunicationStatus.DISABLED);
+        g.setCreatedAt(createdAt);
+        g.setUpdatedAt(createdAt);
+
+        inMemoryStore.put(id, g);
+    }
+
     public GrievanceSubmitResponse createGrievance(GrievanceSubmitRequest request) {
         Grievance grievance = new Grievance();
         grievance.setName(request.getName().trim());
@@ -53,6 +158,8 @@ public class GrievanceService {
         grievance.setEmail(request.getEmail().trim().toLowerCase());
         grievance.setLanguage(request.getLanguage().trim().toLowerCase());
         grievance.setOriginalGrievance(request.getGrievance());
+        grievance.setVoiceNoteBase64(request.getVoiceNoteBase64());
+        grievance.setVoiceNoteContentType(request.getVoiceNoteContentType());
 
         // Server owns these fields — never trust the client
         grievance.setStatus(GrievanceStatus.NEW);

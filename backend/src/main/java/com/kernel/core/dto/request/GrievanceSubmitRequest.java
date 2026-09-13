@@ -26,6 +26,9 @@ public class GrievanceSubmitRequest {
     @Size(min = 10, max = 10000)
     private String grievance;
 
+    private String voiceNoteBase64;
+    private String voiceNoteContentType;
+
     public GrievanceSubmitRequest() {}
 
     public GrievanceSubmitRequest(String sessionId, String name, Integer age, String location, String email, String language, String grievance) {
@@ -52,4 +55,8 @@ public class GrievanceSubmitRequest {
     public void setLanguage(String language) { this.language = language; }
     public String getGrievance() { return grievance; }
     public void setGrievance(String grievance) { this.grievance = grievance; }
+    public String getVoiceNoteBase64() { return voiceNoteBase64; }
+    public void setVoiceNoteBase64(String voiceNoteBase64) { this.voiceNoteBase64 = voiceNoteBase64; }
+    public String getVoiceNoteContentType() { return voiceNoteContentType; }
+    public void setVoiceNoteContentType(String voiceNoteContentType) { this.voiceNoteContentType = voiceNoteContentType; }
 }
