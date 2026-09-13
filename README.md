@@ -79,6 +79,9 @@ The application combines cutting-edge web design, real-time multimodal AI analys
 
 ### 9. 📧 Automated Email Notifications
 - Instant high-contrast HTML email confirmations and progress alerts dispatched directly to the citizen's inbox upon submission, status change, or admin replies via Gmail SMTP integration.
+> [!NOTE]
+> **Gmail SMTP Daily Quota Notice for Evaluators / Judges:**
+> The live production demo utilizes Google's standard Gmail SMTP relay service (`smtp.gmail.com`), which enforces a strict daily sending limit (~500 emails/day per Google policy). If this daily quota is exhausted during high-volume testing or evaluation rounds, case submissions, AI triage, status workflows, and live 1-to-1 chats will continue to operate normally, though outgoing notification emails may be throttled until Google resets the 24-hour quota.
 
 ### 10. 🔒 Security & Privacy by Design
 - **Privacy-First Architecture:** Pre-submission exploratory chat sessions are ephemeral and strictly not persisted until user confirmation.
