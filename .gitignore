@@ -1,14 +1,22 @@
-# Environment
+# Environment variables & secrets
 .env
 .env.local
 .env.*.local
+*.properties.local
+test_env.properties
 
-# Maven
+# Maven & Java Build Output
+target/
 backend/target/
 *.jar
 *.war
+*.ear
+*.class
+*.pid
+backend.log
+backend.pid
 
-# IDE
+# IDEs & Editors
 .idea/
 *.iml
 .vscode/
@@ -17,23 +25,32 @@ backend/target/
 .project
 .classpath
 .settings/
+.factorypath
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # Logs
 *.log
 logs/
-
-# Node / Frontend
-frontend/node_modules/
-frontend/.next/
-frontend/out/
-frontend/build/
-frontend/dist/
-node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Node / Frontend Build Output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/out/
 .npm/
+*.tsbuildinfo
+frontend/*.tsbuildinfo
+
+# Temporary & Scratch Files
+scratch/
+tmp/
+temp/

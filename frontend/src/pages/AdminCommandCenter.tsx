@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from '../components/common/Button';
 import { api, setAuthToken, getAuthToken } from '../api';
@@ -8,18 +8,12 @@ export default function AdminCommandCenter() {
   const navigate = useNavigate();
   const [token, setToken] = useState<string>(getAuthToken() || '');
   const [password, setPassword] = useState('');
-
-  // Check if root access was unlocked through the secret method or if an active in-memory token exists
-  const isUnlocked = typeof window !== 'undefined' && sessionStorage.getItem('kernel_root_unlocked') === 'true';
-  const hasToken = !!token;
-
-  if (!isUnlocked && !hasToken) {
-    return <Navigate to="/" replace />;
-  }
+  const [filterStatus, setFilterStatus] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const loginMutation = useMutation({
     mutationFn: async (pwd: string) => {
-      const { data } = await api.post('/api/admin/login', { password: pwd });
+      const { data } = await api.post('/api/admin/login', { password: pwd.trim() });
       return data;
     },
     onSuccess: (data) => {
@@ -73,7 +67,7 @@ export default function AdminCommandCenter() {
         <div className="absolute w-96 h-96 rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none" />
         
         <form 
-          onSubmit={(e) => { e.preventDefault(); loginMutation.mutate(password); }}
+          onSubmit={(e) => { e.preventDefault(); if (password.trim()) loginMutation.mutate(password); }}
           className="relative z-10 w-full max-w-md bg-black/60 p-8 rounded-2xl border border-white/10 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
         >
           <div className="flex items-center space-x-2 mb-3">
@@ -111,9 +105,6 @@ export default function AdminCommandCenter() {
       </div>
     );
   }
-
-  const [filterStatus, setFilterStatus] = useState<string>('ALL');
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const formatDate = (isoStr?: string) => {
     if (!isoStr) return 'Just now';
