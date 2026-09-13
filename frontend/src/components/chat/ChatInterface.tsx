@@ -50,32 +50,31 @@ const LOCALES: Record<Language, ChatLocale> = {
   en: {
     channelTitle: 'CONVERSATION WITH THEO',
     initLines: [
-      "...Whoa.",
-      "Someone actually made it through.",
-      "Hey. I'm KERNEL.",
-      "Before we get into anything serious...",
+      "Hello.",
+      "I'm Theo — KERNEL.",
+      "I'm here to listen and help however I can.",
+      "Before we get started...",
       "What should I call you?"
     ],
     nameAck: (name) => [
       `${name}.`,
-      "Good to meet you.",
+      "It's good to meet you.",
       "How old are you?"
     ],
     ageAck: (age) => [
       `${age}.`,
-      "Alright. You're definitely young enough to be making questionable decisions.",
-      "Not that I'm judging.",
+      "Thank you.",
       "Where are you reaching me from?"
     ],
     locationAck: (loc) => [
       `Got it. Location logged: ${loc}.`,
-      "Now, what's your specific email address?",
+      "Now, what is your email address?",
       "Please enter a valid email so I can send your confirmation and case updates."
     ],
     emailAck: (name) => [
-      `Alright, ${name}.`,
-      "Name, age, location, email... I've got what I need.",
-      "Now tell me...",
+      `Thank you, ${name}.`,
+      "I've got your basic details.",
+      "Now, please take your time and tell me...",
       "What happened?"
     ],
     namePlaceholder: 'What should I call you?',
@@ -94,7 +93,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "Couldn't connect. Give it a moment.",
     errorRepeat: "Didn't catch that. Can you say that again?",
     errorTransmit: "Failed to send. Please try again.",
-    summaryIntro: "Okay.\nI think I've got the picture.\nLet me make sure I understood you correctly.",
+    summaryIntro: "Okay.\nI understand your situation.\nLet me make sure I understood you correctly.",
     sentAck: "Alright.\nSending it.\nYour message is on its way.",
     anythingElseAck: "The problem is noted and securely dispatched. I'm right here with you — is there anything more you want help with?",
     editAck: "No problem. What did I get wrong?",
@@ -103,21 +102,20 @@ const LOCALES: Record<Language, ChatLocale> = {
   es: {
     channelTitle: 'CONVERSACIÓN CON THEO',
     initLines: [
-      "...Vaya.",
-      "Alguien realmente logró pasar.",
-      "Hola. Soy KERNEL.",
-      "Antes de hablar de cosas serias...",
+      "Hola.",
+      "Soy Theo — KERNEL.",
+      "Estoy aquí para escucharte y ayudarte en lo que pueda.",
+      "Antes de comenzar...",
       "¿Cómo debería llamarte?"
     ],
     nameAck: (name) => [
       `${name}.`,
-      "Gusto en conocerte.",
+      "Un gusto conocerte.",
       "¿Cuántos años tienes?"
     ],
     ageAck: (age) => [
       `${age}.`,
-      "Bien. Tienes edad para tomar decisiones cuestionables.",
-      "No es que esté juzgando.",
+      "Gracias por compartirlo.",
       "¿Desde dónde te estás comunicando?"
     ],
     locationAck: (loc) => [
@@ -126,9 +124,9 @@ const LOCALES: Record<Language, ChatLocale> = {
       "Por favor ingresa un correo válido para enviarte la confirmación y el seguimiento."
     ],
     emailAck: (name) => [
-      `Bien, ${name}.`,
-      "Nombre, edad, ubicación, correo... tengo lo necesario.",
-      "Ahora dime...",
+      `Gracias, ${name}.`,
+      "Tengo tus datos anotados.",
+      "Ahora cuéntame con calma...",
       "¿Qué sucedió?"
     ],
     namePlaceholder: '¿Cómo debería llamarte?',
@@ -147,7 +145,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "No se pudo conectar. Un momento.",
     errorRepeat: "No logré captar eso. ¿Puedes repetirlo?",
     errorTransmit: "Error al enviar. Inténtalo de nuevo.",
-    summaryIntro: "Entendido.\nCreo que tengo la situación clara.\nDéjame confirmar si te entendí bien.",
+    summaryIntro: "Entendido.\nEntiendo tu situación.\nDéjame confirmar si te entendí bien.",
     sentAck: "De acuerdo.\nEnviándolo.\nTu mensaje va en camino.",
     anythingElseAck: "El problema está anotado y enviado de forma segura. Sigo aquí contigo, ¿hay algo más en lo que te pueda ayudar?",
     editAck: "Sin problema. ¿Qué entendí mal?",
@@ -156,10 +154,10 @@ const LOCALES: Record<Language, ChatLocale> = {
   fr: {
     channelTitle: 'CONVERSATION AVEC THEO',
     initLines: [
-      "...Whoa.",
-      "Quelqu'un a réussi à traverser.",
-      "Salut. Je suis KERNEL.",
-      "Avant d'entrer dans les choses sérieuses...",
+      "Bonjour.",
+      "Je suis Theo — KERNEL.",
+      "Je suis là pour t'écouter et t'aider du mieux possible.",
+      "Avant de commencer...",
       "Comment dois-je t'appeler ?"
     ],
     nameAck: (name) => [
@@ -169,8 +167,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     ],
     ageAck: (age) => [
       `${age} ans.`,
-      "D'accord. Assez jeune pour prendre des décisions discutables.",
-      "Non pas que je juge.",
+      "Merci de me l'avoir indiqué.",
       "D'où me contactes-tu ?"
     ],
     locationAck: (loc) => [
@@ -179,9 +176,9 @@ const LOCALES: Record<Language, ChatLocale> = {
       "Merci d'indiquer un email valide pour recevoir la confirmation et le suivi."
     ],
     emailAck: (name) => [
-      `Bien, ${name}.`,
-      "Nom, âge, localisation, email... j'ai ce qu'il me faut.",
-      "Maintenant dis-moi...",
+      `Merci, ${name}.`,
+      "J'ai bien noté tes coordonnées.",
+      "Maintenant, dis-moi...",
       "Que s'est-il passé ?"
     ],
     namePlaceholder: 'Comment dois-je t\'appeler ?',
@@ -200,7 +197,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "Impossible de se connecter. Un instant.",
     errorRepeat: "Je n'ai pas bien saisi. Peux-tu répéter ?",
     errorTransmit: "Échec d'envoi. Réessaie.",
-    summaryIntro: "Compris.\nJe vois la situation.\nLaisse-moi vérifier que j'ai bien compris.",
+    summaryIntro: "Compris.\nJe comprends ta situation.\nLaisse-moi vérifier que j'ai bien compris.",
     sentAck: "Entendu.\nC'est envoyé.\nTon message est en route.",
     anythingElseAck: "Le problème est noté et transmis en toute sécurité. Je reste en ligne avec toi — y a-t-il autre chose pour laquelle tu as besoin d'aide ?",
     editAck: "Pas de souci. Qu'ai-je mal compris ?",
@@ -209,32 +206,31 @@ const LOCALES: Record<Language, ChatLocale> = {
   de: {
     channelTitle: 'GESPRÄCH MIT THEO',
     initLines: [
-      "...Whoa.",
-      "Jemand ist tatsächlich durchgekommen.",
-      "Hey. Ich bin KERNEL.",
-      "Bevor wir zu etwas Ernstem kommen...",
+      "Hallo.",
+      "Ich bin Theo — KERNEL.",
+      "Ich bin hier, um zuzuhören und zu helfen.",
+      "Bevor wir anfangen...",
       "Wie soll ich dich nennen?"
     ],
     nameAck: (name) => [
       `${name}.`,
-      "Schön dich kennenzulernen.",
+      "Schön, dich kennenzulernen.",
       "Wie alt bist du?"
     ],
     ageAck: (age) => [
       `${age}.`,
-      "Alles klar. Alt genug, um fragwürdige Entscheidungen zu treffen.",
-      "Nicht, dass ich urteile.",
+      "Vielen Dank.",
       "Von wo aus erreichst du mich?"
     ],
     locationAck: (loc) => [
       `Verstanden. Standort erfasst: ${loc}.`,
-      "Wie lautet jetzt deine E-Mail-Adresse?",
+      "Wie lautet deine E-Mail-Adresse?",
       "Bitte gib eine gültige E-Mail-Adresse ein, damit ich dir eine Bestätigung senden kann."
     ],
     emailAck: (name) => [
-      `In Ordnung, ${name}.`,
-      "Name, Alter, Ort, E-Mail... Ich habe, was ich brauche.",
-      "Jetzt erzähl mir...",
+      `Danke, ${name}.`,
+      "Ich habe deine Angaben erfasst.",
+      "Jetzt erzähl mir bitte in Ruhe...",
       "Was ist passiert?"
     ],
     namePlaceholder: 'Wie soll ich dich nennen?',
@@ -253,7 +249,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "Verbindung fehlgeschlagen. Einen Moment bitte.",
     errorRepeat: "Habe das nicht verstanden. Kannst du es wiederholen?",
     errorTransmit: "Senden fehlgeschlagen. Bitte erneut versuchen.",
-    summaryIntro: "Alles klar.\nIch verstehe das Bild.\nLass mich prüfen, ob ich alles richtig verstanden habe.",
+    summaryIntro: "Alles klar.\nIch verstehe deine Situation.\nLass mich prüfen, ob ich alles richtig verstanden habe.",
     sentAck: "In Ordnung.\nNachricht wird gesendet.\nDeine Nachricht ist unterwegs.",
     anythingElseAck: "Das Problem ist notiert und sicher übermittelt. Ich bin weiterhin hier — gibt es noch etwas, bei dem ich dir helfen kann?",
     editAck: "Kein Problem. Was habe ich falsch verstanden?",
@@ -262,33 +258,32 @@ const LOCALES: Record<Language, ChatLocale> = {
   ja: {
     channelTitle: 'THEOとの対話',
     initLines: [
-      "...おや。",
-      "本当に通信が繋がったのか。",
-      "やあ。俺はKERNELだ。",
-      "本題に入る前に...",
-      "なんて呼べばいい？"
+      "こんにちは。",
+      "私はTheo — KERNELだ。",
+      "力になれるよう、しっかり話を聞くよ。",
+      "始める前に...",
+      "お名前を教えてもらえるかい？"
     ],
     nameAck: (name) => [
-      `${name}だな。`,
-      "会えてよかった。",
-      "年齢を教えてくれるか？"
+      `${name}さん。`,
+      "お会いできて嬉しいよ。",
+      "年齢を教えてもらえるかい？"
     ],
     ageAck: (age) => [
-      `${age}歳か。`,
-      "なるほど。無茶な決断をするには十分な若さだな。",
-      "責めてるわけじゃないぞ。",
-      "どこから通信しているんだ？"
+      `${age}歳ですね。`,
+      "教えてくれてありがとう。",
+      "どこから連絡してくれているんだい？"
     ],
     locationAck: (loc) => [
-      `了解した。現在地（${loc}）を記録した。`,
-      "次に、あなたのメールアドレスを教えてほしい。",
+      `了解した。所在地（${loc}）を記録したよ。`,
+      "次に、連絡用のメールアドレスを教えてほしい。",
       "確認メッセージや詳細を届けるため、有効なメールアドレスを入力してくれ。"
     ],
     emailAck: (name) => [
-      `よし、${name}。`,
-      "名前、年齢、場所、メール... 必要な情報は揃った。",
-      "さて、教えてくれ...",
-      "何が起きたんだ？"
+      `ありがとう、${name}さん。`,
+      "必要な基本情報は受け取ったよ。",
+      "さて、落ち着いてほしい...",
+      "何があったんだい？"
     ],
     namePlaceholder: 'お名前を入力してください',
     agePlaceholder: '年齢を入力してください',
@@ -306,7 +301,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "接続できませんでした。少し待ってから再試行してください。",
     errorRepeat: "聞き取れませんでした。もう一度入力してください。",
     errorTransmit: "送信に失敗しました。もう一度お試しください。",
-    summaryIntro: "了解した。\n状況は把握できたと思う。\n正しく理解できたか確認させてくれ。",
+    summaryIntro: "了解した。\n状況は把握できた。\n正しく理解できたか確認させてくれ。",
     sentAck: "よし。\n送信する。\nメッセージはTheoに届けられた。",
     anythingElseAck: "問題は記録され、安全に送信された。まだ通信は繋がっている。他に手伝えることはあるか？",
     editAck: "問題ない。どこを直せばいい？",
@@ -315,21 +310,20 @@ const LOCALES: Record<Language, ChatLocale> = {
   hi: {
     channelTitle: 'थियो के साथ बातचीत',
     initLines: [
-      "...अरे वाह।",
-      "सच में कोई संपर्क साध पाया।",
-      "नमस्ते। मैं KERNEL हूँ।",
-      "किसी गंभीर बात पर जाने से पहले...",
+      "नमस्ते。",
+      "मैं थियो — KERNEL हूँ।",
+      "मैं आपकी बात सुनने और पूरी मदद करने के लिए यहाँ हूँ।",
+      "शुरू करने से पहले...",
       "मैं आपको किस नाम से पुकारूँ?"
     ],
     nameAck: (name) => [
-      `${name}.`,
+      `${name} जी।`,
       "आपसे मिलकर अच्छा लगा।",
       "आपकी उम्र क्या है?"
     ],
     ageAck: (age) => [
-      `${age}.`,
-      "समझ गया। आप सही मायनों में नए फैसले लेने की उम्र में हैं।",
-      "वैसे मैं कोई फैसला नहीं सुना रहा।",
+      `${age} वर्ष।`,
+      "बताने के लिए धन्यवाद।",
       "आप मुझे कहाँ से संपर्क कर रहे हैं?"
     ],
     locationAck: (loc) => [
@@ -338,9 +332,9 @@ const LOCALES: Record<Language, ChatLocale> = {
       "कृपया एक वैध ईमेल पता दर्ज करें ताकि मैं आपको पुष्टिकरण और मामले का विवरण भेज सकूँ।"
     ],
     emailAck: (name) => [
-      `ठीक है, ${name}।`,
-      "नाम, उम्र, स्थान, ईमेल... मुझे जो चाहिए था वह मिल गया।",
-      "अब मुझे बताइए...",
+      `धन्यवाद, ${name} जी।`,
+      "मुझे आपकी प्राथमिक जानकारी मिल गई है।",
+      "अब कृपया आराम से बताएं...",
       "क्या हुआ था?"
     ],
     namePlaceholder: 'मैं आपको किस नाम से पुकारूँ?',
@@ -359,7 +353,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "कनेक्ट नहीं हो सका। कृपया कुछ देर प्रतीक्षा करें।",
     errorRepeat: "समझ नहीं आया। क्या आप दोबारा कह सकते हैं?",
     errorTransmit: "भेजने में विफल। कृपया पुनः प्रयास करें।",
-    summaryIntro: "ठीक है।\nमुझे स्थिति समझ आ गई है।\nमैं सुनिश्चित कर लूँ कि मैंने सब सही समझा है।",
+    summaryIntro: "ठीक है।\nमुझे आपकी स्थिति समझ आ गई है।\nमैं सुनिश्चित कर लूँ कि मैंने सब सही समझा है।",
     sentAck: "बिल्कुल।\nभेज दिया गया है।\nआपका संदेश रास्ते में है।",
     anythingElseAck: "समस्या नोट कर ली गई है और सुरक्षित रूप से भेज दी गई है। मैं यहीं आपके साथ हूँ — क्या कुछ और है जिसमें आपको मदद चाहिए?",
     editAck: "कोई बात नहीं। मुझसे क्या समझने में भूल हुई?",
@@ -368,10 +362,10 @@ const LOCALES: Record<Language, ChatLocale> = {
   ml: {
     channelTitle: 'തിയോയുമായുള്ള സംഭാഷണം',
     initLines: [
-      "...വൗ.",
-      "ഒടുവിൽ ഒരാൾ ഇവിടെ എത്തിച്ചേർന്നു.",
-      "ഹലോ. ഞാൻ KERNEL ആണ്.",
-      "ഗുരുതരമായ കാര്യങ്ങളിലേക്ക് കടക്കുന്നതിന് മുൻപ്...",
+      "നമസ്കാരം.",
+      "ഞാൻ തിയോ — KERNEL ആണ്.",
+      "നിങ്ങളെ കേൾക്കാനും സഹായിക്കാനും ഞാൻ ഇവിടെയുണ്ട്.",
+      "തുടങ്ങുന്നതിന് മുൻപ്...",
       "ഞാൻ നിങ്ങളെ എന്താണ് വിളിക്കേണ്ടത്?"
     ],
     nameAck: (name) => [
@@ -381,8 +375,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     ],
     ageAck: (age) => [
       `${age}.`,
-      "ശരി. പുതിയ തീരുമാനങ്ങൾ എടുക്കാൻ പറ്റിയ പ്രായം തന്നെ.",
-      "ഞാൻ ആരെയും വിലയിരുത്തുകയല്ല കേട്ടോ.",
+      "വിവരം പങ്കുവെച്ചതിന് നന്ദി.",
       "നിങ്ങൾ എവിടെ നിന്നാണ് എന്നെ ബന്ധപ്പെടുന്നത്?"
     ],
     locationAck: (loc) => [
@@ -391,8 +384,8 @@ const LOCALES: Record<Language, ChatLocale> = {
       "സ്ഥിരീകരണവും വിവരങ്ങളും അയക്കാൻ സാധുവായ ഒരു ഇമെയിൽ നൽകുക."
     ],
     emailAck: (name) => [
-      `ശരി, ${name}.`,
-      "പേര്, പ്രായം, സ്ഥലം, ഇമെയിൽ... എനിക്ക് വേണ്ട വിവരങ്ങൾ ലഭിച്ചു.",
+      `നന്ദി, ${name}.`,
+      "പ്രാഥമിക വിവരങ്ങൾ എനിക്ക് ലഭിച്ചു.",
       "ഇനി പറയൂ...",
       "എന്താണ് സംഭവിച്ചത്?"
     ],
@@ -412,7 +405,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "ബന്ധപ്പെടാൻ കഴിഞ്ഞില്ല. അൽപ്പസമയം കാത്തിരിക്കൂ.",
     errorRepeat: "വ്യക്തമായില്ല. വീണ്ടും പറയാമോ?",
     errorTransmit: "അയക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.",
-    summaryIntro: "ശരി.\nകാര്യങ്ങൾ എനിക്ക് വ്യക്തമായി.\nഞാൻ മനസ്സിലാക്കിയത് ശരിയാണോ എന്ന് പരിശോധിക്കട്ടെ.",
+    summaryIntro: "ശരി.\nനിങ്ങളുടെ സാഹചര്യം എനിക്ക് മനസ്സിലായി.\nഞാൻ മനസ്സിലാക്കിയത് ശരിയാണോ എന്ന് പരിശോധിക്കട്ടെ.",
     sentAck: "ശരി.\nഅയച്ചു കഴിഞ്ഞു.\nനിങ്ങളുടെ സന്ദേശം കൈമാറിയിരിക്കുന്നു.",
     anythingElseAck: "പ്രശ്നം രേഖപ്പെടുത്തി സുരക്ഷിതമായി അയച്ചിട്ടുണ്ട്. ഞാൻ ഇവിടെത്തന്നെയുണ്ട് — വേറെ എന്തെങ്കിലും സഹായം ആവശ്യമുണ്ടോ?",
     editAck: "സാരമില്ല. എവിടെയാണ് തെറ്റിയത്?",
@@ -421,10 +414,10 @@ const LOCALES: Record<Language, ChatLocale> = {
   ar: {
     channelTitle: 'محادثة مع ثيو',
     initLines: [
-      "...يا للروعة.",
-      "أحدهم تمكن من الوصول بالفعل.",
-      "مرحباً. أنا KERNEL.",
-      "قبل أن ندخل في أي موضوع جاد...",
+      "مرحباً.",
+      "أنا ثيو — KERNEL.",
+      "أنا هنا للاستماع إليك ومساعدتك بكل ما أستطيع.",
+      "قبل أن نبدأ...",
       "بماذا تحب أن أناديك؟"
     ],
     nameAck: (name) => [
@@ -434,8 +427,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     ],
     ageAck: (age) => [
       `${age}.`,
-      "حسناً. بالتأكيد أنت في سن كافية لاتخاذ قرارات جريئة.",
-      "لست هنا للحكم عليك بالطبع.",
+      "شكراً لمشاركتك ذلك.",
       "من أين تتواصل معي؟"
     ],
     locationAck: (loc) => [
@@ -444,9 +436,9 @@ const LOCALES: Record<Language, ChatLocale> = {
       "يرجى إدخال بريد إلكتروني صالح لإرسال التأكيد وتفاصيل الحالة."
     ],
     emailAck: (name) => [
-      `حسناً، ${name}.`,
-      "الاسم، العمر، الموقع، البريد الإلكتروني... حصلت على كل ما أحتاجه.",
-      "والآن أخبرني...",
+      `شكراً لك يا ${name}.`,
+      "حصلت على معلوماتك الأساسية.",
+      "والآن أخبرني بهدوء...",
       "ماذا حدث؟"
     ],
     namePlaceholder: 'بماذا أناديك؟',
@@ -465,7 +457,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "تعذر الاتصال. انتظر لحظة من فضلك.",
     errorRepeat: "لم أسمع ذلك جيداً. هل يمكنك التكرار؟",
     errorTransmit: "فشل الإرسال. يرجى المحاولة مرة أخرى.",
-    summaryIntro: "حسناً.\nأعتقد أن الصورة واضحة لدي.\nدعني أتأكد من أنني فهمتك بشكل صحيح.",
+    summaryIntro: "حسناً.\nأتفهم وضعك.\nدعني أتأكد من أنني فهمتك بشكل صحيح.",
     sentAck: "حسناً.\nجاري الإرسال.\nرسالتك في طريقها الآن.",
     anythingElseAck: "تم تسجيل المشكلة وإرسالها بأمان. ما زلت معك على الخط — هل هناك أي شيء آخر تريد المساعدة بشأنه؟",
     editAck: "لا توجد مشكلة. ما الذي أخطأت في فهمه؟",
@@ -474,10 +466,10 @@ const LOCALES: Record<Language, ChatLocale> = {
   pt: {
     channelTitle: 'CONVERSA COM THEO',
     initLines: [
-      "...Nossa.",
-      "Alguém finalmente conseguiu passar.",
-      "Olá. Eu sou KERNEL.",
-      "Antes de entrarmos em algo sério...",
+      "Olá.",
+      "Eu sou Theo — KERNEL.",
+      "Estou aqui para te ouvir e ajudar no que for preciso.",
+      "Antes de começarmos...",
       "Como devo te chamar?"
     ],
     nameAck: (name) => [
@@ -487,8 +479,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     ],
     ageAck: (age) => [
       `${age}.`,
-      "Certo. Idade suficiente para tomar decisões questionáveis.",
-      "Não que eu esteja julgando.",
+      "Obrigado por compartilhar.",
       "De onde você está falando?"
     ],
     locationAck: (loc) => [
@@ -497,9 +488,9 @@ const LOCALES: Record<Language, ChatLocale> = {
       "Por favor, insira um e-mail válido para que eu possa enviar sua confirmação e acompanhamento."
     ],
     emailAck: (name) => [
-      `Certo, ${name}.`,
-      "Nome, idade, localização, e-mail... Já tenho o que preciso.",
-      "Agora me diga...",
+      `Obrigado, ${name}.`,
+      "Já tenho seus dados iniciais.",
+      "Agora me conte com calma...",
       "O que aconteceu?"
     ],
     namePlaceholder: 'Como devo te chamar?',
@@ -518,7 +509,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorConnect: "Não foi possível conectar. Aguarde um momento.",
     errorRepeat: "Não entendi bem. Pode repetir?",
     errorTransmit: "Falha ao enviar. Tente novamente.",
-    summaryIntro: "Entendido.\nAcho que entendi a situação.\nDeixe-me confirmar se compreendi direito.",
+    summaryIntro: "Entendido.\nCompreendo a sua situação.\nDeixe-me confirmar se compreendi direito.",
     sentAck: "Beleza.\nEnviando.\nSua mensagem está a caminho.",
     anythingElseAck: "O problema foi registrado e enviado com segurança. Continuo aqui com você — há mais alguma coisa em que você precisa de ajuda?",
     editAck: "Sem problemas. O que eu entendi errado?",
@@ -527,9 +518,9 @@ const LOCALES: Record<Language, ChatLocale> = {
   ru: {
     channelTitle: 'СВЯЗЬ С ТЕО',
     initLines: [
-      "...Ого.",
-      "Кто-то действительно смог пробиться.",
-      "Привет. Я KERNEL.",
+      "Приветствую.",
+      "Я Тео — KERNEL.",
+      "Я здесь, чтобы выслушать тебя и помочь во всём, чем смогу.",
       "Прежде чем перейти к делу...",
       "Как мне тебя называть?"
     ],
@@ -540,8 +531,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     ],
     ageAck: (age) => [
       `${age}.`,
-      "Понятно. Достаточно юный возраст для рискованных решений.",
-      "Не то чтобы я осуждал.",
+      "Спасибо за ответ.",
       "Откуда ты выходишь на связь?"
     ],
     locationAck: (loc) => [
@@ -550,9 +540,9 @@ const LOCALES: Record<Language, ChatLocale> = {
       "Пожалуйста, введи действующий email для получения подтверждения и связи."
     ],
     emailAck: (name) => [
-      `Хорошо, ${name}.`,
-      "Имя, возраст, локация, email... У меня есть всё необходимое.",
-      "Теперь расскажи...",
+      `Спасибо, ${name}.`,
+      "Все необходимые данные получены.",
+      "А теперь расскажи подробно...",
       "Что произошло?"
     ],
     namePlaceholder: 'Как мне тебя называть?',
@@ -568,14 +558,14 @@ const LOCALES: Record<Language, ChatLocale> = {
     sendBtn: 'Отправить',
     confirmedTitle: 'СООБЩЕНИЕ ПОЛУЧЕНО',
     confirmedSubtitle: 'Тео получил твои данные. Проверь электронную почту.',
-    errorConnect: "Не удалось подключиться. Подожди немного.",
+    errorConnect: "Не удалось подключиться. Подожди минутку.",
     errorRepeat: "Не расслышал. Можешь повторить?",
     errorTransmit: "Ошибка отправки. Попробуй еще раз.",
-    summaryIntro: "Понятно.\nКартина проясняется.\nДай мне убедиться, что я всё понял правильно.",
-    sentAck: "Отлично.\nОтправляю.\nТвоё сообщение в пути.",
-    anythingElseAck: "Проблема зафиксирована и надежно отправлена. Я все еще на связи с вами — есть ли что-то еще, с чем вам нужна помощь?",
-    editAck: "Без проблем. В чём я ошибся?",
-    invalidEmail: "Это не похоже на действительный email. Пожалуйста, укажи корректный адрес (например: name@example.com)."
+    summaryIntro: "Понятно.\nКартина ясна.\nПозволь уточнить, всё ли я правильно понял.",
+    sentAck: "Хорошо.\nОтправляю.\nТвое сообщение уже в пути.",
+    anythingElseAck: "Проблема зафиксирована и надежно отправлена. Я остаюсь на связи с тобой — есть ли что-то еще, с чем я могу помочь?",
+    editAck: "Без проблем. Что именно я понял не так?",
+    invalidEmail: "Этот адрес электронной почты не похож на настоящий. Пожалуйста, введи действующий email (например: name@example.com)."
   }
 };
 
