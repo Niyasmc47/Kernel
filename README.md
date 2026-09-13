@@ -58,8 +58,15 @@ The application combines cutting-edge web design, real-time multimodal AI analys
 ### 5. 🦹 Arch-Nemesis Lore
 - Discover the dossier and story behind KERNEL’s notorious arch-nemesis, exploring their ideological clash, past battles, and the existential threat posed to the city.
 
-### 6. 🔐 Secret Root Access
-- An easter egg terminal interaction and hidden shortcut that unlocks the encrypted login portal to the **KERNEL Command Center** for authorized headquarters personnel.
+### 6. 🔐 Secret Root Access (Command Center Ingress)
+- An encrypted backdoor sequence allowing Theo and authorized personnel to unlock the hidden **KERNEL Command Center**:
+  - **Desktop / Laptop Access:**
+    1. **Triple-Click** rapidly anywhere on the screen (3 clicks within 2.5s) to activate resonance detection.
+    2. Type the secret key sequence **`SHIFT + K - E - R - N - E - L`** while holding `Shift`.
+  - **Mobile / Tablet Access:**
+    1. **Triple-Tap** rapidly anywhere on the screen.
+    2. Perform a deliberate **Swipe Down** gesture.
+  - **Core Ingress:** A cinematic holographic **`ROOT ACCESS`** overlay will materialize on screen. Clicking **`[ ACCESS CORE ]`** grants entry into the administrative portal (`/admin`).
 
 ### 7. 🛡️ Grievance Management / Command Center
 - Full-featured administrative dashboard:
