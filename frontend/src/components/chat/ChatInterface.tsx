@@ -41,6 +41,7 @@ interface ChatLocale {
   errorTransmit: string;
   summaryIntro: string;
   sentAck: string;
+  anythingElseAck: string;
   editAck: string;
   invalidEmail: string;
 }
@@ -95,6 +96,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "Failed to send. Please try again.",
     summaryIntro: "Okay.\nI think I've got the picture.\nLet me make sure I understood you correctly.",
     sentAck: "Alright.\nSending it.\nYour message is on its way.",
+    anythingElseAck: "The problem is noted and securely dispatched. I'm right here with you — is there anything more you want help with?",
     editAck: "No problem. What did I get wrong?",
     invalidEmail: "That doesn't look like a valid email address. Please enter a valid email (e.g. name@example.com)."
   },
@@ -147,6 +149,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "Error al enviar. Inténtalo de nuevo.",
     summaryIntro: "Entendido.\nCreo que tengo la situación clara.\nDéjame confirmar si te entendí bien.",
     sentAck: "De acuerdo.\nEnviándolo.\nTu mensaje va en camino.",
+    anythingElseAck: "El problema está anotado y enviado de forma segura. Sigo aquí contigo, ¿hay algo más en lo que te pueda ayudar?",
     editAck: "Sin problema. ¿Qué entendí mal?",
     invalidEmail: "Ese no parece un correo electrónico válido. Ingresa un correo válido (ej. nombre@ejemplo.com)."
   },
@@ -199,6 +202,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "Échec d'envoi. Réessaie.",
     summaryIntro: "Compris.\nJe vois la situation.\nLaisse-moi vérifier que j'ai bien compris.",
     sentAck: "Entendu.\nC'est envoyé.\nTon message est en route.",
+    anythingElseAck: "Le problème est noté et transmis en toute sécurité. Je reste en ligne avec toi — y a-t-il autre chose pour laquelle tu as besoin d'aide ?",
     editAck: "Pas de souci. Qu'ai-je mal compris ?",
     invalidEmail: "Cette adresse email ne semble pas valide. Merci d'entrer un email valide (ex. nom@exemple.com)."
   },
@@ -251,6 +255,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "Senden fehlgeschlagen. Bitte erneut versuchen.",
     summaryIntro: "Alles klar.\nIch verstehe das Bild.\nLass mich prüfen, ob ich alles richtig verstanden habe.",
     sentAck: "In Ordnung.\nNachricht wird gesendet.\nDeine Nachricht ist unterwegs.",
+    anythingElseAck: "Das Problem ist notiert und sicher übermittelt. Ich bin weiterhin hier — gibt es noch etwas, bei dem ich dir helfen kann?",
     editAck: "Kein Problem. Was habe ich falsch verstanden?",
     invalidEmail: "Das scheint keine gültige E-Mail-Adresse zu sein. Bitte gib eine gültige E-Mail ein (z.B. name@beispiel.de)."
   },
@@ -303,6 +308,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "送信に失敗しました。もう一度お試しください。",
     summaryIntro: "了解した。\n状況は把握できたと思う。\n正しく理解できたか確認させてくれ。",
     sentAck: "よし。\n送信する。\nメッセージはTheoに届けられた。",
+    anythingElseAck: "問題は記録され、安全に送信された。まだ通信は繋がっている。他に手伝えることはあるか？",
     editAck: "問題ない。どこを直せばいい？",
     invalidEmail: "有効なメールアドレスではないようです。正しいメールアドレスを入力してください（例: name@example.com）。"
   },
@@ -355,6 +361,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "भेजने में विफल। कृपया पुनः प्रयास करें।",
     summaryIntro: "ठीक है।\nमुझे स्थिति समझ आ गई है।\nमैं सुनिश्चित कर लूँ कि मैंने सब सही समझा है।",
     sentAck: "बिल्कुल।\nभेज दिया गया है।\nआपका संदेश रास्ते में है।",
+    anythingElseAck: "समस्या नोट कर ली गई है और सुरक्षित रूप से भेज दी गई है। मैं यहीं आपके साथ हूँ — क्या कुछ और है जिसमें आपको मदद चाहिए?",
     editAck: "कोई बात नहीं। मुझसे क्या समझने में भूल हुई?",
     invalidEmail: "यह एक मान्य ईमेल पता नहीं लगता। कृपया एक मान्य ईमेल दर्ज करें (उदा. name@example.com)।"
   },
@@ -407,6 +414,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "അയക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.",
     summaryIntro: "ശരി.\nകാര്യങ്ങൾ എനിക്ക് വ്യക്തമായി.\nഞാൻ മനസ്സിലാക്കിയത് ശരിയാണോ എന്ന് പരിശോധിക്കട്ടെ.",
     sentAck: "ശരി.\nഅയച്ചു കഴിഞ്ഞു.\nനിങ്ങളുടെ സന്ദേശം കൈമാറിയിരിക്കുന്നു.",
+    anythingElseAck: "പ്രശ്നം രേഖപ്പെടുത്തി സുരക്ഷിതമായി അയച്ചിട്ടുണ്ട്. ഞാൻ ഇവിടെത്തന്നെയുണ്ട് — വേറെ എന്തെങ്കിലും സഹായം ആവശ്യമുണ്ടോ?",
     editAck: "സാരമില്ല. എവിടെയാണ് തെറ്റിയത്?",
     invalidEmail: "ഇതൊരു സാധുവായ ഇമെയിൽ വിലാസമല്ല. ദയവായി ശരിയായ ഇമെയിൽ നൽകുക (उदा: name@example.com)."
   },
@@ -459,6 +467,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "فشل الإرسال. يرجى المحاولة مرة أخرى.",
     summaryIntro: "حسناً.\nأعتقد أن الصورة واضحة لدي.\nدعني أتأكد من أنني فهمتك بشكل صحيح.",
     sentAck: "حسناً.\nجاري الإرسال.\nرسالتك في طريقها الآن.",
+    anythingElseAck: "تم تسجيل المشكلة وإرسالها بأمان. ما زلت معك على الخط — هل هناك أي شيء آخر تريد المساعدة بشأنه؟",
     editAck: "لا توجد مشكلة. ما الذي أخطأت في فهمه؟",
     invalidEmail: "هذا البريد الإلكتروني غير صالح. يرجى إدخال بريد إلكتروني صحيح (مثل name@example.com)."
   },
@@ -511,6 +520,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "Falha ao enviar. Tente novamente.",
     summaryIntro: "Entendido.\nAcho que entendi a situação.\nDeixe-me confirmar se compreendi direito.",
     sentAck: "Beleza.\nEnviando.\nSua mensagem está a caminho.",
+    anythingElseAck: "O problema foi registrado e enviado com segurança. Continuo aqui com você — há mais alguma coisa em que você precisa de ajuda?",
     editAck: "Sem problemas. O que eu entendi errado?",
     invalidEmail: "Este não parece ser um e-mail válido. Por favor, insira um e-mail válido (ex: nome@exemplo.com)."
   },
@@ -531,7 +541,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     ageAck: (age) => [
       `${age}.`,
       "Понятно. Достаточно юный возраст для рискованных решений.",
-      "Не то чтобы я осуждаल.",
+      "Не то чтобы я осуждал.",
       "Откуда ты выходишь на связь?"
     ],
     locationAck: (loc) => [
@@ -563,6 +573,7 @@ const LOCALES: Record<Language, ChatLocale> = {
     errorTransmit: "Ошибка отправки. Попробуй еще раз.",
     summaryIntro: "Понятно.\nКартина проясняется.\nДай мне убедиться, что я всё понял правильно.",
     sentAck: "Отлично.\nОтправляю.\nТвоё сообщение в пути.",
+    anythingElseAck: "Проблема зафиксирована и надежно отправлена. Я все еще на связи с вами — есть ли что-то еще, с чем вам нужна помощь?",
     editAck: "Без проблем. В чём я ошибся?",
     invalidEmail: "Это не похоже на действительный email. Пожалуйста, укажи корректный адрес (например: name@example.com)."
   }
@@ -821,8 +832,16 @@ export default function ChatInterface({ startChat = true }: ChatInterfaceProps) 
     mutationFn: (payload: any) => submitGrievance(payload),
     onSuccess: () => {
       setIsTyping(false);
-      setPhase('SUBMITTED');
       appendMsg('ai', locale.sentAck);
+      setAudioUrl(null);
+      setAudioBase64(null);
+      setAnalysisResult(null);
+
+      // Transition back to active interactive dialogue
+      setPhase('GRIEVANCE');
+      setTimeout(() => {
+        simulateKernelTyping([locale.anythingElseAck], 1200);
+      }, 900);
     },
     onError: (err: any) => {
       console.error('Submit grievance error:', err);
