@@ -4,7 +4,7 @@
 
 [![Frontend: React + Vite](https://img.shields.io/badge/Frontend-React%2018%20%7C%20Vite%20%7C%20TailwindCSS-61DAFB?logo=react&logoColor=black)](https://kernel47.vercel.app/)
 [![Backend: Spring Boot 3](https://img.shields.io/badge/Backend-Spring%20Boot%203.2%20%7C%20Java%2021-6DB33F?logo=springboot&logoColor=white)](https://kernel-backend-api-a8fmcze0ezfdg7au.centralindia-01.azurewebsites.net/api/health)
-[![Database: PostgreSQL + H2](https://img.shields.io/badge/Database-PostgreSQL%20%2F%20H2-336791?logo=postgresql&logoColor=white)](#)
+[![Database: MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb&logoColor=white)](#)
 [![AI: Google Gemini](https://img.shields.io/badge/AI-Google%20Gemini%20Flash-4285F4?logo=google&logoColor=white)](#)
 [![Deployment: Vercel & Azure](https://img.shields.io/badge/Deploy-Vercel%20%2B%20Azure%20App%20Service-0078D4?logo=microsoftazure&logoColor=white)](#)
 
@@ -97,11 +97,11 @@ graph TD
     User([Citizen / User]) <-->|HTTPS / REST / WebSocket| Frontend[React + Vite Frontend\nTailwindCSS + Lucide + Howler]
     Admin([Theo / HQ Admin]) <-->|Authenticated JWT Dashboard| Frontend
     
-    Frontend <-->|REST API| Backend[Spring Boot 3 API Gateway\nSecurity + JPA + Validation]
+    Frontend <-->|REST API| Backend[Spring Boot 3 API Gateway\nSecurity + MongoDB + Validation]
     
     Backend <-->|AI Conversational Analysis| Gemini[Google Gemini LLM]
     Backend <-->|Notification Dispatch| SMTP[Gmail SMTP Service]
-    Backend <-->|Relational Persistence| Database[(PostgreSQL / H2 Database)]
+    Backend <-->|Document Persistence| Database[(MongoDB Database)]
 ```
 
 ---
@@ -118,8 +118,8 @@ graph TD
 ### Backend
 - **Framework:** Spring Boot 3.2.5 (Java 21)
 - **Security:** Spring Security, JWT (JSON Web Tokens), BCrypt password hashing
-- **Persistence:** Spring Data JPA, Hibernate
-- **Database:** PostgreSQL (Production on Azure) / H2 (In-memory testing)
+- **Persistence:** Spring Data MongoDB
+- **Database:** MongoDB (Atlas / Azure Cosmos DB / Local MongoDB)
 - **AI Integration:** Google Gemini API (`gemini-1.5-flash`)
 - **Email:** Spring Boot Starter Mail (Gmail SMTP TLS/SSL)
 - **Testing:** JUnit 5, Mockito, AssertJ (52 passing automated tests)
@@ -132,7 +132,7 @@ graph TD
 - **Node.js**: v18.0.0 or higher & `npm`
 - **Java JDK**: Version 17 or 21
 - **Maven**: Version 3.8+
-- *(Optional)* **PostgreSQL** or Docker for local production database simulation
+- **MongoDB**: MongoDB Atlas URI or local MongoDB instance (`mongodb://localhost:27017/kernel`)
 
 ---
 
@@ -202,11 +202,12 @@ graph TD
 | Variable | Description | Default / Example |
 | :--- | :--- | :--- |
 | `SERVER_PORT` | Port for Spring Boot | `8080` |
-| `KERNEL_ADMIN_PASSWORD` | Secure root password for Admin Command Center | Configured in deployment |
-| `KERNEL_JWT_SECRET` | Secret key for JWT signing | 256-bit HS256 String |
-| `KERNEL_GEMINI_API_KEY` | Google Gemini API key for conversational AI | Gemini Flash API key |
-| `KERNEL_MAIL_USERNAME` | Gmail SMTP sender address | `notifications@kernel.org` |
-| `KERNEL_MAIL_PASSWORD` | Gmail App Password (16 chars) | `xxxx xxxx xxxx xxxx` |
+| `MONGODB_URI` | MongoDB Connection URI (Atlas / Cosmos DB / Local) | `mongodb+srv://user:pass@cluster.mongodb.net/kernel` |
+| `ADMIN_PASSWORD` | Secure root password for Admin Command Center | `kernelctygz` |
+| `JWT_SECRET` | Secret key for JWT signing | 256-bit HS256 String |
+| `GEMINI_API_KEY` | Google Gemini API key for conversational AI | Gemini Flash API key |
+| `GMAIL_USERNAME` | Gmail SMTP sender address | `notifications@gmail.com` |
+| `GMAIL_APP_PASSWORD` | Gmail App Password (16 chars) | `xxxx xxxx xxxx xxxx` |
 | `VITE_API_URL` | Base API URL consumed by React client | `https://kernel-backend-api-...` |
 
 ---
